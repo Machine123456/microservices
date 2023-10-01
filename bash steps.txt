@@ -1,0 +1,20 @@
+cd /authentication-service/app
+mvn clean install
+cd .. 
+docker build -t andrealao/microservices:authentication-service-test .
+
+cd ..
+
+cd /product-service/app
+mvn clean install
+cd .. 
+docker build -t andrealao/microservices:product-service-test .
+
+cd ..
+
+cd ..
+docker compose up
+
+/----------------------/
+
+docker run --name my-mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=rootroot  --mount source=mysql_db,target=/var/lib/mysql -d mysql:8.1.0

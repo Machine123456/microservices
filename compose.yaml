@@ -1,0 +1,70 @@
+version: '3.1'
+
+services:
+
+  authentication:
+    image: andrealao/microservices:authentication-service-test
+    ports: 
+      - 8091:8091
+    environment:
+      DOCKER_DNS_RESOLVER: 127.0.0.11
+      JWT_SECRET: default-secret-key
+
+      SERVER_PORT: 8091
+      SERVER_BRIDGE_PORT: 8091
+      SERVER_BRIDGE_HOSTNAME: localhost
+      
+      DATABASE_HOST: db # mysql-db.chg7ujdhhts7.eu-west-3.rds.amazonaws.com
+      DATABASE_PORT: 3306
+      DATABASE_NAME: authentication_service
+      DATABASE_PSD: rootroot
+      DATABASE_UNAME: root
+      
+      SERVICES: >-
+        [{"name":"authentication-service","address":"http://authentication:8091"},{"name":"product-service","address":"http://product:8092"}]
+
+    depends_on:
+      db:
+        condition: service_healthy
+
+  product:
+    image: andrealao/microservices:product-service-test
+    ports: 
+      - 8092:8092
+    environment:
+      DOCKER_DNS_RESOLVER: 127.0.0.11
+
+      SERVER_PORT: 8092
+      SERVER_BRIDGE_PORT: 8092
+      
+      DATABASE_HOST: db # mysql-db.chg7ujdhhts7.eu-west-3.rds.amazonaws.com
+      DATABASE_PORT: 3306
+      DATABASE_NAME: product_service
+      DATABASE_PSD: rootroot
+      DATABASE_UNAME: root
+
+      AUTH_SERVICE_ADRESS: http://authentication:8091
+      AUTH_SERVICE_REG_NAME: authentication-service
+
+    depends_on:
+      db:
+        condition: service_healthy
+  
+  db:
+    image: mysql:8.1.0
+    command: --default-authentication-plugin=caching_sha2_password
+    # restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootroot
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    volumes:
+      - mysql_db:/var/lib/mysql
+
+volumes:
+  mysql_db: {}

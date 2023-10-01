@@ -1,0 +1,41 @@
+$github_account = "Machine123456"
+$repo_name = "microservices"
+$directoryPath = ".\$repo_name"
+$startPath = $PWD.Path
+
+$repo_url = "https://github.com/$github_account/$repo_name.git"
+
+git clone $repo_url $directoryPath
+cd $directoryPath
+
+$branches = git branch -a | Select-Object -Skip 2
+
+$branches_names = $branches | ForEach-Object {
+     $parts = $_ -split '/'
+     return $parts[-1]
+}
+
+for ($i = 0; $i -lt $branches.Length; $i++) {
+    $branche = $branches[$i]
+    $branch_name = $branches_names[$i]
+
+    if (![string]::IsNullOrEmpty($branch_name)) {
+        # Create a directory for the branch
+        New-Item -ItemType Directory -Path $branch_name -Force
+        git clone -b $branch_name --single-branch $repo_url $branch_name
+    }
+}
+
+cd $startPath
+
+ $items = Get-ChildItem -Path $directoryPath -Force
+
+foreach ($item in $items) {
+   if ($item.Name -notin $branches_names) {
+       if ($item.PSIsContainer) {
+            Remove-Item -Path $item.FullName -Recurse -Force
+       } else {
+          Remove-Item -Path $item.FullName -Force
+        }
+   }
+}
