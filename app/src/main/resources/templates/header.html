@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="header-links">
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/static/css/header.css" />
+    <script src="/static/js/header.js"></script>
+</head>
+<body>
+    <div th:fragment="header" class="top-bar">
+        <div id="servicesWrapper" class="left-items"></div>
+        <div class="right-items">
+            <div class="dropdown" onclick="toggleDropdown(this)">
+                <img class="inv-rotate" src="/static/images/favicon.png">
+                <div class="dropdown-content">
+                    <div class="req-login">
+                        <div class="dropdown-item" id="userName"></div>
+                        <div class="dropdown-item" id="userEmail"></div>
+                        <div class="divider"></div>            
+                        <div class="logout-parent">
+                            <a onclick="logout(event)" class="logout-button">Logout</a>
+                        </div>
+                        <div class="divider"></div>
+                    </div>
+                    <div class="logout-parent">
+                        <a onclick="refreshHeader()" class="logout-button">Refresh Header</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

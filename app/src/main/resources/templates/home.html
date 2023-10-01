@@ -1,0 +1,19 @@
+<html>
+<head>
+    <title>Product Home</title>
+    <th:block th:insert="~{header :: header-links}"></th:block>
+
+    <link rel="stylesheet" href="/static/css/home.css">
+    <link rel="icon" type="image/png" href="/static/images/producticon.png">
+    <script src="/static/js/home.js"></script>
+</head>
+<body>
+     <header th:insert="~{header :: header}"></header>
+     
+    <div class="container">
+        <h1>Product List</h1>
+        <div class="product-list" id="productList">
+            <!-- Products will be dynamically added here -->
+        </div>
+</body>
+</html>

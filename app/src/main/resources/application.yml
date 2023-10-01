@@ -1,0 +1,37 @@
+api:
+    endpoint:
+        server:
+            port: ${SERVER_PORT:8092}
+            bridge:
+                port: ${SERVER_BRIDGE_PORT:${api.endpoint.server.port}}
+        auth-service: 
+            reg-name: ${AUTH_SERVICE_REG_NAME:authentication-service}
+            adress: ${AUTH_SERVICE_ADRESS:http://localhost:8091}
+        database:
+            host: ${DATABASE_HOST:localhost} # mysql-db.chg7ujdhhts7.eu-west-3.rds.amazonaws.com}
+            port: ${DATABASE_PORT:3306}
+            name: ${DATABASE_NAME:product_service}
+            pass: ${DATABASE_PSD:rootroot} # should be replaced with an authentication service user
+            user: ${DATABASE_UNAME:root}
+
+
+
+spring:
+    datasource:
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://${api.endpoint.database.host}:${api.endpoint.database.port}/${api.endpoint.database.name}?createDatabaseIfNotExist=true
+        username: ${api.endpoint.database.user}
+        password: ${api.endpoint.database.pass}
+    jpa:
+        hibernate:
+            ddl-auto: update
+        show-sql: false
+        properties:
+            hibernate:
+                dialect: org.hibernate.dialect.MySQLDialect
+    mvc:
+        static-path-pattern: /static/**
+
+
+server:
+    port: ${api.endpoint.server.port}
