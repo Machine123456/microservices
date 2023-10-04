@@ -1,19 +1,19 @@
-cd /authentication-service/app
+cd ./authentication-service/app
 mvn clean install
 cd .. 
 docker build -t andrealao/microservices:authentication-service-test .
 
 cd ..
 
-cd /product-service/app
+cd ./product-service/app
 mvn clean install
 cd .. 
 docker build -t andrealao/microservices:product-service-test .
 
 cd ..
 
-cd ..
-docker compose up
+cd ./main
+docker compose -p microservices up
 
 /----------------------/
 
