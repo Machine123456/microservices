@@ -26,26 +26,14 @@ public class UserService {
     }
 
     public UserResponse findUserByUsername(String uname) throws IllegalArgumentException {
-        var user = userRepository.findByUsername(uname).orElseThrow(() -> new IllegalArgumentException("Could not found the token retrieved username in the database"));
+        var user = userRepository.findByUsername(uname).orElseThrow(() -> new IllegalArgumentException("User not found with username: " + uname));
         return mapToUserResponse(user);
     }
 
-    public UserResponse findFirstByEmailOrUsername(String uname, String email) {
-
-        var checkUser = userRepository.findFirstByEmailOrUsername(email, uname);
-
-        if(checkUser.isPresent())
-            return mapToUserResponse(checkUser.get());
-        
-        return null;
-    }
-
     public void saveUser(User user) throws IllegalArgumentException{
-        var response = userRepository.findFirstByEmailOrUsername(user.getEmail(), user.getUsername());
-        
-        if(response != null) 
+        if(userRepository.findFirstByEmailOrUsername(user.getEmail(), user.getUsername()).isPresent())
             throw new IllegalArgumentException("User with the same email or username already exists.");
-        
+    
         userRepository.save(user);
 
         return;
