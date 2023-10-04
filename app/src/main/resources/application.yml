@@ -8,10 +8,10 @@ api:
             reg-name: ${AUTH_SERVICE_REG_NAME:authentication-service}
             adress: ${AUTH_SERVICE_ADRESS:http://localhost:8091}
         database:
-            host: ${DATABASE_HOST:localhost} # mysql-db.chg7ujdhhts7.eu-west-3.rds.amazonaws.com}
+            host: ${DATABASE_HOST:mysql-db.chg7ujdhhts7.eu-west-3.rds.amazonaws.com} # localhost
             port: ${DATABASE_PORT:3306}
             name: ${DATABASE_NAME:product_service}
-            pass: ${DATABASE_PSD:rootroot} # should be replaced with an authentication service user
+            pass: ${DATABASE_PSD:rootroot} # should be replaced with an product service user
             user: ${DATABASE_UNAME:root}
 
 
