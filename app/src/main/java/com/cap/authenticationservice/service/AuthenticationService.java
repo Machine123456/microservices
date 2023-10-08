@@ -8,7 +8,6 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.imageio.ImageIO;
 
@@ -22,15 +21,12 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.cap.authenticationservice.dto.MappingResponse;
 import com.cap.authenticationservice.dto.UserRequest;
-import com.cap.authenticationservice.model.Role;
 import com.cap.authenticationservice.model.User;
-import com.cap.authenticationservice.repository.RoleRepository;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -44,9 +40,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthenticationService {
 
-    
-    private final RoleRepository roleRepository;
-    private final PasswordEncoder passwordEncoder;  
     private final AuthenticationManager authenticationManager;
     private final TokenService tokenService;
 
@@ -75,20 +68,6 @@ public class AuthenticationService {
     }
 
   
-    public User mapToUser(UserRequest userRequest) {
-
-        Role userRole = roleRepository.findByAuthority("ROLE_USER").orElseThrow(() -> new IllegalArgumentException("Roles are not properly fetched in the database"));
-        // Check requested authorities TODO
-        User user = User.builder()
-        .username(userRequest.getUsername())
-        .email(userRequest.getEmail())
-        .password(passwordEncoder.encode(userRequest.getPassword()))
-        .authorities(Set.of(userRole))
-        .build();
-        
-        return user;
-    }
-
 
     public Map<String, MappingResponse> getServicesMapping() throws Exception{
 
@@ -150,9 +129,10 @@ public class AuthenticationService {
 
         MappingResponse res = new MappingResponse();
 
-        res.addEndpoint("home","USER"); 
-        res.addEndpoint("login");
+        res.addEndpoint("home"); 
+        res.addEndpoint("index","USER");
         res.addEndpoint("admin","ADMIN");
+        res.addEndpoint("register");
 
         res.setBridgeAdress("http://" + bridgeHostname + ":" + bridgePort);
 

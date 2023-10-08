@@ -1,7 +1,9 @@
 package com.cap.authenticationservice.model;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -31,44 +33,64 @@ import lombok.NoArgsConstructor;
 @Builder
 public class User implements UserDetails{
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
-    @Column(unique = true)
-    private String username;
-    @Column(unique = true)
-    private String email;
-    private String password;
-  
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-      name = "user_role",
-      joinColumns = {@JoinColumn(name="user_id")},
-      inverseJoinColumns = {@JoinColumn(name="role_id")}
-    )
-    @Builder.Default
-    private Set<Role> authorities = new HashSet<>();
+   public static final Map<String,String> USERNAME_PATTERNS = 
+      new HashMap<String, String>() {{ 
+         put("^[a-zA-Z0-9]+$", " Username can be only made of letters and numbers");
+      }};
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-      return authorities;
-    }
+   public static final Map<String,String> EMAIL_PATTERNS = 
+      new HashMap<String, String>() {{ 
+         put("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$", "Invalid email format");
+      }};
 
-    @Override
-    public boolean isAccountNonExpired() {
+   public static final Map<String,String> PASSWORD_PATTERNS = 
+      new HashMap<String, String>() {{ 
+         put(".{6,}", "Password must have at least 6 characters");
+         put(".*[A-Z].*", "Password must have at least one capital letter");
+         put(".*[!@#$%^&*].*", "Password must have at least one symbol");
+         put(".*\\d.*", "Password must have at least one number");
+      }};
+
+   @Id
+   @GeneratedValue(strategy = GenerationType.UUID)
+   private UUID id;
+
+   @Column(unique = true, nullable = false)
+   private String username;
+
+   @Column(unique = true, nullable = false)
+   private String email;
+
+   @Column(nullable = false)
+   private String password;
+
+   @ManyToMany(fetch = FetchType.EAGER)
+   @JoinTable(
+     name = "user_role",
+     joinColumns = {@JoinColumn(name="user_id")},
+     inverseJoinColumns = {@JoinColumn(name="role_id")}
+   )
+   @Builder.Default
+   private Set<Role> authorities = new HashSet<>();
+   @Override
+   public Collection<? extends GrantedAuthority> getAuthorities() {
+     return authorities;
+   }
+   @Override
+   public boolean isAccountNonExpired() {
+      return true;
+   }
+   @Override
+   public boolean isAccountNonLocked() {
+      return true;
+   }
+   @Override
+   public boolean isCredentialsNonExpired() {
+      return true; 
+   }
+   @Override
+   public boolean isEnabled() {
        return true;
-    }
-    @Override
-    public boolean isAccountNonLocked() {
-       return true;
-    }
-    @Override
-    public boolean isCredentialsNonExpired() {
-       return true; 
-    }
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
-
+   }
+   
  }

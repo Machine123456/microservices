@@ -20,9 +20,9 @@ public class ModelController {
         return new ModelAndView("home");
     }
 
-    @GetMapping("/login")
+    @GetMapping("/index")
     public ModelAndView gotoLoginPage(Model model) {
-        return new ModelAndView("login");
+        return new ModelAndView("index");
     }
 
     @GetMapping("/admin")
@@ -30,4 +30,8 @@ public class ModelController {
         return new ModelAndView("admin");
     }
     
+    @GetMapping("/register")
+    public ModelAndView gotoRegisterPage(Model model) { 
+        return new ModelAndView("register");
+    }
 }

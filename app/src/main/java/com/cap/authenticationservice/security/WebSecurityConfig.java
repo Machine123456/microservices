@@ -34,7 +34,7 @@ import lombok.AllArgsConstructor;
 public class WebSecurityConfig {
 
 	private static String[] PUBLIC_POST_STRING_PATTERS = {"/auth/**"};	
-	private static String[] PUBLIC_GET_STRING_PATTERS = {"/login","/static/**","/auth/**"};
+	private static String[] PUBLIC_GET_STRING_PATTERS = {"/home","/register","/static/**","/auth/**"};
 
 	public static List<RequestMatcher> PUBLIC_POST_PATTERNS = List.of(PUBLIC_POST_STRING_PATTERS).stream().map(pattern ->(RequestMatcher)new AntPathRequestMatcher(pattern)).collect(Collectors.toList());	
 	public static List<RequestMatcher> PUBLIC_GET_PATTERNS = List.of(PUBLIC_GET_STRING_PATTERS).stream().map(pattern ->(RequestMatcher)new AntPathRequestMatcher(pattern)).collect(Collectors.toList());
@@ -86,7 +86,7 @@ public class WebSecurityConfig {
 			)
 			.exceptionHandling(exception -> exception.defaultAuthenticationEntryPointFor(authenticationEntryPoint(), new AntPathRequestMatcher("/api/**")) )
 			.formLogin(form -> form
-				.loginPage("/login")
+				.loginPage("/home")
 				.permitAll()
 			);
 

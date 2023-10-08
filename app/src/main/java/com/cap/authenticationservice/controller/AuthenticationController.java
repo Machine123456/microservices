@@ -38,8 +38,7 @@ public class AuthenticationController{
     public ResponseEntity<String> registerUser(@RequestBody UserRequest userRequest, HttpServletResponse response){
 
         try {
-            var user = authService.mapToUser(userRequest);
-            userService.saveUser(user);
+            userService.saveUser(userRequest);
 
             String token = authService.authenticateUser(userRequest);
             response.addCookie(tokenService.generateTokenCookie(token));
@@ -91,25 +90,25 @@ public class AuthenticationController{
     @GetMapping("/recoverToken")
     @ResponseBody
     public ResponseEntity<String> recoverToken(HttpServletRequest request) {
-    try {
-        return ResponseEntity.ok(tokenService.recoverToken(request));
-    } catch (Exception e) {
-        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(null);
-    } 
+        try {
+            return ResponseEntity.ok(tokenService.recoverToken(request));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(null);
+        } 
     }
 
     @CrossOrigin
     @GetMapping("/getUserFromToken")
     @ResponseBody
     public ResponseEntity<UserResponse> getUserFromToken(HttpServletRequest request) {
-    try {
-        String token = tokenService.recoverToken(request);
-        String uname = tokenService.validateToken(token);//URLDecoder.decode(token, "UTF-8"));
-        var user = userService.findUserByUsername(uname);
-        return ResponseEntity.ok(user);
-    } catch (Exception e) {
-        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(null);
-    }
+        try {
+            String token = tokenService.recoverToken(request);
+            String uname = tokenService.validateToken(token);//URLDecoder.decode(token, "UTF-8"));
+            var user = userService.findUserByUsername(uname);
+            return ResponseEntity.ok(user);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(null);
+        }
     }
 
     @CrossOrigin
@@ -117,36 +116,35 @@ public class AuthenticationController{
     @ResponseBody
     public ResponseEntity<Map<String, MappingResponse>> getServicesMapping(HttpServletRequest request) {
 
-    try {
-        Map<String, MappingResponse> res = authService.getServicesMapping();
-        return ResponseEntity.ok(res);
-    } catch (Exception e) {
-        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(null);
-    } 
+        try {
+            Map<String, MappingResponse> res = authService.getServicesMapping();
+            return ResponseEntity.ok(res);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(null);
+        } 
     }
 
     @GetMapping("/getMapping")
     @ResponseBody
     public ResponseEntity<MappingResponse> getMapping(HttpServletRequest request) {
-    try {
-        MappingResponse res = authService.getMapping();
-        return ResponseEntity.ok(res);
-    } catch (Exception e) {
-        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(null);
-    } 
+        try {
+            MappingResponse res = authService.getMapping();
+            return ResponseEntity.ok(res);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(null);
+        } 
     }
 
     @GetMapping("/redirect")
     @ResponseBody
     public ResponseEntity<Void> redirect(HttpServletRequest request, HttpServletResponse response, @RequestParam("href") String href) {
         try {
-        return ResponseEntity.status(authService.redirect(request,response,href)).build();
-    } catch (Exception e) {
-        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).build();
-    } 
+            return ResponseEntity.status(authService.redirect(request,response,href)).build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).build();
+        } 
     }
     
-
     @CrossOrigin
     @GetMapping("/getBridgeHostname")
     @ResponseBody
@@ -154,6 +152,11 @@ public class AuthenticationController{
         return ResponseEntity.ok(authService.getBridgeHostname());
     }
 
+    @GetMapping("/getUserRequirements")
+    @ResponseBody
+    public ResponseEntity<Map<String,Map<String,String>>> getUserRequirements() {
+        return ResponseEntity.ok(userService.getUserFieldsRequirements());
+    }
 
     
 }

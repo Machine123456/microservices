@@ -9,7 +9,7 @@ api:
                 port: ${SERVER_BRIDGE_PORT:${api.endpoint.server.port}}
                 host: ${SERVER_BRIDGE_HOSTNAME:localhost}
         database:
-            host: ${DATABASE_HOST:mysql-db.chg7ujdhhts7.eu-west-3.rds.amazonaws.com} # localhost
+            host: ${DATABASE_HOST:localhost} # mysql-db.chg7ujdhhts7.eu-west-3.rds.amazonaws.com
             port: ${DATABASE_PORT:3306}
             name: ${DATABASE_NAME:authentication_service}
             pass: ${DATABASE_PSD:rootroot} # should be replaced with an authentication service user

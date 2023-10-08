@@ -1,0 +1,42 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    text-align: center;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.user-card {
+    padding: 10px;
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
+    background-color: #f9f9f9;
+}
+
+.user-name {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.user-email {
+    font-size: 14px;
+    color: #777;
+}
+
+.empty-message {
+    text-align: center;
+    font-style: italic;
+    color: #777;
+}

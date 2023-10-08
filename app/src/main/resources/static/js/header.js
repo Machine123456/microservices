@@ -2,29 +2,32 @@ document.addEventListener('DOMContentLoaded', function() {
 
     refreshHeader();
     document.body.addEventListener('click', function (event) {
-        if (
-            !event.target.closest('.dropdown') &&
-            !event.target.closest('.dropdown > *')
-        ) {
+        const isWithinDropdown = Boolean(event.target.closest('.dropdown'))
+        if (!isWithinDropdown) 
             closeAllDropdowns();
-        }
     });
-
-    
-
 });
 
 function refreshHeader(){
     fetchMapping()
     .then(() => fetchUser())
     .then((userRole) => {
+
             switch(userRole) {
                 case null:
                 case "":
+                    //logout
                     hideRequiredLoginComponents();
-                case "USER":
                     hideRequiredAdminComponents();
+                    break;
+                case "USER":
+                    //login as user
+                    hideRequiredLogoutComponents();
+                    hideRequiredAdminComponents();
+                    break;
                 case "ADMIN":
+                    //login as adm
+                    hideRequiredLogoutComponents();
                     break;
             }
             
@@ -46,11 +49,12 @@ function fetchMapping(){
             
             const serviceDiv = document.createElement("div");
             serviceDiv.classList.add("dropdown");
-            serviceDiv.onclick = function() {toggleDropdown(serviceDiv);};
+            
 
             const serviceImage = document.createElement("img");
             serviceImage.alt = serviceName;
             serviceImage.src = serviceMapping.imageData;
+            serviceImage.onclick = function() {toggleDropdown(serviceDiv);};
 
             serviceDiv.appendChild(serviceImage);
             
@@ -191,18 +195,21 @@ function updateCurrentUrls(){
     });
 }
 
+function hideRequiredLogoutComponents() {
+    hideComponentsWith('.req-logout');
+}
+
 function hideRequiredLoginComponents() {
-     
-    var reqComponent = document.querySelectorAll('.req-login');
-    reqComponent.forEach(function (component) {
-        component.style.display = "none";
-    });
+    hideComponentsWith('.req-login');
 }
 
 function hideRequiredAdminComponents() {
-     
-    var reqComponent = document.querySelectorAll('.req-admin');
-    reqComponent.forEach(function (component) {
+    hideComponentsWith('.req-admin');
+}
+
+function hideComponentsWith(selector){
+    var components = document.querySelectorAll(selector);
+    components.forEach(function (component) {
         component.style.display = "none";
     });
 }
@@ -232,10 +239,12 @@ function closeAllDropdowns() {
 }
    
 
-function toggleDropdown(serviceDiv) {
+function toggleDropdown(toggleBtn) {
 
-    var dropdownContent = serviceDiv.querySelector(':scope > .dropdown-content');
-    var image = serviceDiv.querySelector(':scope > img');
+    var dropdown = toggleBtn.closest('.dropdown');
+    
+    var dropdownContent = dropdown.querySelector(':scope > .dropdown-content');
+    var image = dropdown.querySelector(':scope > img');
    
     var toActive = dropdownContent != null && !dropdownContent.classList.contains('active');
     
@@ -256,26 +265,60 @@ function toggleDropdown(serviceDiv) {
     }
 }
 
-function logout(event) {
+function logout() {
+  
+    fetch('/auth/logout')
+    .then(response => {
+        if (response.status === 200) {
+          window.location.href = '/home';
+        }
+    })
+    .catch(error => {
+        console.error('Error during logout:', error);
+    });
+}
+
+function login(event) {
+
     event.preventDefault();
+    const loginForm = document.querySelector('.login-form');
+
+    const username = loginForm.querySelector('.form-username');
+    const password = loginForm.querySelector('.form-password');
+    const feedback =  loginForm.querySelector('.form-feedback');
+        
+    if(!username || !password)
+        return displayFeedback("Error querying loginForm: null fields");
+
     //const csrfToken = document.querySelector('input[name="_csrf"]').value;
 
-    fetch('/auth/logout'
-        /*,{
-      method: 'GET',
-      headers: {
+    fetch('/auth/login',{
+      method: 'POST',
+      body: JSON.stringify({ username: username.value, email: username.value, password: password.value })
+      ,headers: {
         'Content-Type': 'application/json',
         // Add any other headers as needed, including the CSRF token if required
         // 'X-CSRF-TOKEN': csrfToken,
-      },
-    }*/
+      }
+    }
     )
-      .then(response => {
+    .then(response => {
         if (response.status === 200) {
-          window.location.href = '/login';
+            displayFeedback("Login Successfully");
+            window.location.href = '/index';
         }
-      })
-      .catch(error => {
-        console.error('Error during logout:', error);
-      });
-  }
+        else return response.text().then(errorMessage =>  displayFeedback(errorMessage));
+    })
+    .catch(error => {
+        displayFeedback('Error during login, check logs for more info');
+        console.error('Error during login:', error);
+    });
+
+    function displayFeedback(message){
+
+        if(!feedback) return;
+        
+        feedback.classList.add("active");
+        feedback.textContent = message; 
+    }
+}

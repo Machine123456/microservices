@@ -1,23 +1,34 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Users Home</title>
+    <title>User login</title>
     <link rel="icon" type="image/png" href="/static/images/authicon.png">
-    
+
     <th:block th:insert="~{header :: header-links}"></th:block>
-
-    <link rel="stylesheet" href="/static/css/home.css">
-   
-    <script src="/static/js/home.js"></script>
-
+    <link rel="stylesheet" href="/static/css/home.css" />
 </head>
 <body>
-    <header th:insert="~{header :: header}"></header>
-    <div class="container">
-        <h1>Users List</h1>
-        <div class="user-list" id="userList">
-            <!-- Users will be dynamically added here -->
+    <div class="left-body">
+        <header th:insert="~{header :: header}"></header>
+        <div id="panel1">
+            <h1> Hi, thanks for checking out my work :)</h1>
+            <div>
+                <button class="day"> Day </button>
+                <button class="night"> Night </button>
+            </div>
+        </div>
+        <div id="panel2">
+            <div id="frame1"></div>
+            <div id="frame2"></div>
+        </div>
+        <div id="panel3">
+            <button><</button>
+            <div class="display"></div>
+            <button>></button>
+        </div>
     </div>
+    <div class="right-body">
 
+    </div>
 </body>
 </html>
