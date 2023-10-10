@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head th:fragment="header-links">
     <meta charset="UTF-8">
     <link rel="stylesheet" href="/static/css/header.css" />
     <script src="/static/js/header.js"></script>
 </head>
+
 <body>
     <div th:fragment="header" class="top-bar">
         <div id="servicesWrapper" class="left-items"></div>
@@ -28,7 +30,7 @@
                     <div class="req-login">
                         <div class="dropdown-item" id="userName"></div>
                         <div class="dropdown-item" id="userEmail"></div>
-                        <div class="divider"></div>            
+                        <div class="divider"></div>
                         <button onclick="logout()" class="dropdown-btn">Logout</button>
                     </div>
                     <div class="divider"></div>
@@ -38,4 +40,5 @@
         </div>
     </div>
 </body>
+
 </html>

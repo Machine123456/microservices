@@ -1,6 +1,16 @@
+:root {
+    --bar-color: #333;
+    --bar-details-color: #f0f0f0;
+    --bar-details-color2: #808080;
+    --bar-feedback-color: #e74c3c;
+    --bar-feedback-color2: #FFD5D5;
+
+    
+}
+
 body {
     font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
+    background-color: var(--bar-details-color);
     margin: 0;
     text-align: center;
     user-select: none;
@@ -10,8 +20,8 @@ body {
 
     width: 100%;
 
-    background-color: #333;
-    color: #fff;
+    background-color: var(--bar-color);
+    color: var(--bar-details-color);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -63,12 +73,12 @@ body {
             transition: transform 0.2s;
 
             &:hover {
-                border: 2px solid gray;
+                border: 2px solid var(--bar-details-color2);
                 transform: scale(1.1);
             }
 
             &.active {
-                border: 2px solid white;
+                border: 2px solid var(--bar-details-color);
                 transform: scale(1.1);
             }
 
@@ -89,9 +99,9 @@ body {
 
         .dropdown-content {
             position: absolute;
-            background-color: #fff;
+            background-color: var(--bar-details-color);
             /* Adjusted background color */
-            color: #808080;
+            color: var(--bar-details-color2);
 
             width: 200px;
 
@@ -125,7 +135,7 @@ body {
 
                 & input {
                     padding: 5px;
-                    border: 1px solid #ccc;
+                    border: 1px solid var(--bar-details-color2);
 
                     &:not(:nth-of-type(1)) {
                         margin-top: 5px;
@@ -133,12 +143,12 @@ body {
                 }
 
                 .form-feedback {
-                    color: #e74c3c;
+                    color: var(--bar-feedback-color);
                     width: 90%;
                     font-size: 12px;
 
                     margin-top: 7px;
-                    background-color: #FFD5D5;
+                    background-color:  var(--bar-feedback-color2);
                     border-radius: 10px;
 
 
@@ -148,7 +158,7 @@ body {
 
                     &.active {
                         transform: scaleX(1);
-                        border: 1px solid #e74c3c;
+                        border: 1px solid  var(--bar-feedback-color);
                     }
                 }
 
@@ -163,7 +173,7 @@ body {
                         text-decoration: none;
 
                         cursor: pointer;
-                        color: #808080;
+                        color: var(--bar-details-color2);
                         font-size: 8px;
                         margin: 0px;
 
@@ -185,7 +195,7 @@ body {
 
             .divider {
                 width: 100%;
-                border-bottom: 1px solid #777;
+                border-bottom: 1px solid var(--bar-details-color2);
                 /* Adjusted color */
                 margin: 5px 0px;
             }
@@ -193,12 +203,12 @@ body {
             .dropdown-btn {
                 all: unset;
 
-                color: #e74c3c;
+                color:  var(--bar-feedback-color);
                 /* Text color */
                 text-align: center;
 
                 border-style: solid;
-                border-color: #fff;
+                border-color: var(--bar-details-color);
 
                 cursor: pointer;
                 font-weight: normal;

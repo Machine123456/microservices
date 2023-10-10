@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <title>Register new User</title>
     <link rel="icon" type="image/png" href="/static/images/authicon.png">
@@ -9,6 +10,7 @@
     <link rel="stylesheet" href="/static/css/register.css" />
     <script src="/static/js/register.js"></script>
 </head>
+
 <body>
     <header th:insert="~{header :: header}"></header>
     <div class="page-center">
@@ -19,7 +21,7 @@
                 <div class="feedback"></div>
             </div>
             <div class="reg-field" id="reg-email">
-                <input type="text" placeholder="Email" required> 
+                <input type="text" placeholder="Email" required>
                 <div class="feedback"></div>
             </div>
             <div class="reg-field" id="reg-password">
@@ -31,6 +33,7 @@
             <button type="submit" class="dropdown-btn">Register</button>
         </form>
     </div>
-    
+
 </body>
+
 </html>

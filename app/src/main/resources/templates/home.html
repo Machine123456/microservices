@@ -1,20 +1,23 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <title>User login</title>
     <link rel="icon" type="image/png" href="/static/images/authicon.png">
 
     <th:block th:insert="~{header :: header-links}"></th:block>
+    <script src="/static/js/home.js"></script>
     <link rel="stylesheet" href="/static/css/home.css" />
 </head>
+
 <body>
     <div class="left-body">
         <header th:insert="~{header :: header}"></header>
         <div id="panel1">
             <h1> Hi, thanks for checking out my work :)</h1>
             <div>
-                <button class="day"> Day </button>
-                <button class="night"> Night </button>
+                <button class="day" onclick="setColors(true)"> Day </button>
+                <button class="night" onclick="setColors(false)"> Night </button>
             </div>
         </div>
         <div id="panel2">
@@ -22,13 +25,18 @@
             <div id="frame2"></div>
         </div>
         <div id="panel3">
-            <button><</button>
-            <div class="display"></div>
-            <button>></button>
+            <button onclick="swipeLeft(event)">&lt;</button>
+            <div class="middle-panel">
+                <div class="display-wrapper">
+                    <!-- <div class="display">1</div> -->
+                </div>
+            </div>
+            <button onclick="swipeRight(event)">&gt;</button>
         </div>
     </div>
     <div class="right-body">
 
     </div>
 </body>
+
 </html>

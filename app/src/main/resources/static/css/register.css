@@ -5,7 +5,7 @@ body {
     padding: 0;
 }
 
-.page-center{
+.page-center {
     margin: auto;
     width: 50%;
 }
@@ -16,7 +16,7 @@ body {
     align-items: center;
 
     background-color: white;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
     border: 3px solid black;
     border-radius: 10px;
     padding: 10px;
@@ -40,7 +40,7 @@ body {
             padding: 1em;
 
             z-index: 1;
-            
+
             transform: scale(0);
             transform-origin: center;
             transition: transform 0.1s ease;
@@ -50,8 +50,8 @@ body {
             padding: 5px;
             border: 1px solid #ccc;
 
-            &.shake  {
-                animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
+            &.shake {
+                animation: shake 0.82s cubic-bezier(.36, .07, .19, .97) both;
                 transform: translate3d(0, 0, 0);
                 backface-visibility: hidden;
                 perspective: 1000px;
@@ -63,15 +63,15 @@ body {
             .feedback {
                 transform: scale(1);
                 border: 1px solid #e74c3c;
-            }   
+            }
 
             & input {
                 outline-color: #e74c3c;
                 border-color: #e74c3c;
-            }   
+            }
         }
 
-        & input:not(:focus) ~ .feedback {
+        & input:not(:focus)~.feedback {
             transform: scale(0);
         }
 
@@ -80,17 +80,18 @@ body {
     & button {
         all: unset;
 
-        color: black; /* Text color */
+        color: black;
+        /* Text color */
         text-align: center;
 
         border: 1px solid black;
         border-radius: 7px;
 
         padding: .3em;
- 
+
         cursor: pointer;
         font-weight: normal;
-        transition: transform 0.1s,font-weight .1s; 
+        transition: transform 0.1s, font-weight .1s;
 
         &:hover {
             font-weight: bold;
@@ -98,14 +99,31 @@ body {
         }
 
         &:focus {
-             outline: revert;
+            outline: revert;
         }
     }
 }
 
 @keyframes shake {
-    10%, 90% { transform: translate3d(-1px, 0, 0); }
-    20%, 80% { transform: translate3d(2px, 0, 0); }
-    30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
-    40%, 60% { transform: translate3d(4px, 0, 0); }
-  }
+
+    10%,
+    90% {
+        transform: translate3d(-1px, 0, 0);
+    }
+
+    20%,
+    80% {
+        transform: translate3d(2px, 0, 0);
+    }
+
+    30%,
+    50%,
+    70% {
+        transform: translate3d(-4px, 0, 0);
+    }
+
+    40%,
+    60% {
+        transform: translate3d(4px, 0, 0);
+    }
+}
