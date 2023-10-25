@@ -136,7 +136,7 @@ public class AuthenticationService {
 
         res.setBridgeAdress("http://" + bridgeHostname + ":" + bridgePort);
 
-        InputStream inputStream = getClass().getResourceAsStream("/static/images/authicon.png");
+        InputStream inputStream = getClass().getResourceAsStream("/static/images/header/authicon.png");
 
         if (inputStream  != null)  {
             try {

@@ -1,3 +1,5 @@
+
+/*
 var swiperStyle = null;
 var swiper = null;
 
@@ -132,32 +134,19 @@ function swipe(num) {
 
     if (swiper != null) {
             return;
-            /*clearInterval(swiper);
-            swiper = null;*/
     }
 
     var targetDisplay = currentDisplay + num;
-    //targetDisplay = Math.min(Math.max(parseInt(targetDisplay + num), 1), numDisplays);
 
     if (targetDisplay == currentDisplay)
         return;
     
     updateSelected(convertToDNum(targetDisplay));
-    //console.log("targetDisplay: " + targetDisplay + " currentDisplay: " + currentDisplay);
-
-    //console.log("get selected: " + selected);
-    //var dotDelay = (targetDisplay - currentDisplay) * swipeTick / swipeDuration;
     var dotDelay = (num * swipeTick) / swipeDuration;
 
-    //console.log("dotDelay: " + dotDelay);
     var startDisplay = currentDisplay;
 
     swiper = setInterval(function () {
-
-        /*if(Math.abs(currentDisplay - Math.floor(currentDisplay)) < (swipeTick / 1000)) {
-            reorder(Math.floor(currentDisplay));
-            swiperStyle.setProperty('--selected-display', centerDisplay);
-        }*/
 
         if (Math.abs(targetDisplay - currentDisplay) - Math.abs(dotDelay) < (swipeTick / 1000)) {
             currentDisplay = targetDisplay;
@@ -182,3 +171,4 @@ function swipe(num) {
 
 }
 
+*/
