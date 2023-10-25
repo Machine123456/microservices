@@ -5,6 +5,7 @@ pipeline {
         WORKSPACE_DIR = "${JENKINS_HOME}/workspace/${JOB_NAME}"
         DOCKERHUB_REPO = "andrealao/microservices"
         GITHUB_REPO = "Machine123456/microservices"
+        MAIN_BRANCH_NAME = "main"
         IMAGE_VERSION = "1"
     }
 
@@ -18,7 +19,7 @@ pipeline {
                     for (def branch in branches) {
                         def branchName = branch.substring(branch.lastIndexOf('/') + 1)
                          
-                        if (branchName != "main") {
+                        if (branchName != env.MAIN_BRANCH_NAME) {
                             echo "service: " + branchName
                             service_branches.add(branchName)
                         }
@@ -66,6 +67,18 @@ pipeline {
                                 image.push()
                             }
                         }
+                    }
+                }
+            }
+        }
+        
+        stage("Run on Docker") {
+            steps {
+                script {
+                    def mainDir = "${env.WORKSPACE_DIR}/${env.MAIN_BRANCH_NAME}"
+                    dir(mainDir) {
+                        sh "docker compose -p microservices up"
+
                     }
                 }
             }
