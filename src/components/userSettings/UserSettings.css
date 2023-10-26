@@ -1,0 +1,38 @@
+.user-info {
+  padding: 10px;
+  text-decoration: none;
+  /* Adjusted text color */
+}
+
+.divider {
+  width: 100%;
+  border-bottom: 1px solid var(--bar-details-color2);
+  /* Adjusted color */
+  margin: 5px 0px;
+}
+
+.logout-btn {
+  all: unset;
+
+  color: var(--bar-feedback-color);
+  /* Text color */
+  text-align: center;
+
+  border-style: solid;
+  border-color: var(--bar-details-color);
+
+  cursor: pointer;
+  font-weight: normal;
+  /* Normal font weight by default */
+  transition: font-weight 0.2s;
+  /* Smooth transition for font-weight change */
+
+  &:hover {
+    font-weight: bold;
+    /* Bold font weight on hover */
+  }
+
+  &:focus {
+    outline: revert;
+  }
+}
