@@ -1,0 +1,60 @@
+#panel2 {
+    margin-top: auto;
+    margin-bottom: 1em;
+
+    display: flex;
+    gap: 1em;
+
+    aspect-ratio: 4/1;
+
+
+    @media (max-width: 700px) {
+        flex-wrap: wrap;
+
+    }
+
+    & #frame1 {
+
+        width: 40%;
+        background-color: lightpink;
+        border: var(--borders-size) solid var(--details-color);
+        border-radius: var(--borders-radius);
+
+        @media (max-width: 700px) {
+            /* aspect-ratio: 7/5; */
+
+            width: 100%;
+            aspect-ratio: 3/1;
+        }
+
+        .spider-graph {
+            position: relative;
+
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+
+            width: 60%;
+            aspect-ratio: 1;
+            background-color: lightblue;
+        }
+
+    }
+
+    & #frame2 {
+
+        width: 60%;
+
+        background-color: gray;
+        border: var(--borders-size) solid var(--details-color);
+        border-radius: var(--borders-radius);
+
+        @media (max-width: 700px) {
+
+            /* aspect-ratio: 21/10;*/
+
+            width: 100%;
+            aspect-ratio: 3/1;
+        }
+    }
+}

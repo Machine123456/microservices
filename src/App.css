@@ -1,4 +1,94 @@
-:root{
-  background-color: azure;
+:root {
+  --main-color: ; /*App use effect will create and override those*/
+  --details-color: ;
+
+  --borders-size: 2px;
+  --borders-radius: 15px;
 }
 
+
+html, #root {
+  background-color: var(--details-color);
+}
+
+.page {
+  margin: 1vh 7vw;
+  background-color: var(--main-color);
+
+  width: 86vw;
+  display: flex;
+
+  border-radius: var(--borders-radius);
+  gap: 1em;
+
+
+  @media (max-width: 1024px) {
+    flex-direction: column;
+    height: auto;
+    overflow: visible;
+  }
+
+  .left-body {
+
+    margin: 1em;
+    margin-right: 0;
+
+    width: 80%;
+
+    overflow: hidden;
+    border-radius: var(--borders-radius);
+
+    display: flex;
+    flex-direction: column;
+
+    @media (max-width: 1024px) {
+
+      width: calc(100% - 2em - var(--borders-size) * 2);
+      margin-right: 1em;
+      margin-bottom: 0;
+    }
+
+    .top-bar {
+      background-color: var(--main-color);
+
+      & .dropdown img {
+        border-color: var(--details-color);
+      }
+    }
+
+  }
+
+  .right-body {
+
+    margin: 1em;
+    margin-left: 0;
+
+    width: 20%;
+
+    background-color: orange;
+    border: var(--borders-size) solid var(--details-color);
+    border-radius: var(--borders-radius);
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+
+
+    @media (max-width: 1024px) {
+      margin: 1em;
+      margin-top: 0em;
+      width: calc(100% - 2em - var(--borders-size) * 2);
+      min-height: min(200px, 35vh);
+
+      flex-direction: row;
+      justify-content: center;
+    }
+
+    @media (max-width: 700px) {
+      flex-wrap: wrap;
+    }
+
+
+  }
+}

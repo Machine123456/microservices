@@ -27,13 +27,15 @@
     border-radius: 10px;
     border: 1px solid var(--bar-feedback-color);
 
-    transform: scaleX(1);
+    visibility: hidden;
+    transform: scaleX(0);
     transform-origin: center;
     transition: transform 0.1s ease;
 
     
-    &:empty{
-        transform: scaleX(0);
+    &:not(:empty){
+        visibility: visible;
+        transform: scaleX(1);
     }
   }
 

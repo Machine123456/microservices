@@ -1,0 +1,32 @@
+.toggle-bg {
+    min-width: 70px;
+    aspect-ratio: 2/1;
+    
+    background-color: var(--details-color);
+    border-radius: 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    overflow: hidden;
+    .inner{
+        width: 95%;
+        border-radius: 20px;
+      
+        .selector {
+            width: 50%;
+            aspect-ratio: 1/1;
+            border-radius: 50%;
+         
+            background-color: var(--main-color);
+            transition: transform 0.2s ease;
+
+            &.active{
+                transform: translateX(100%);
+            }
+        }
+    }
+
+    
+}

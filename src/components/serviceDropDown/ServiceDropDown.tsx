@@ -1,4 +1,4 @@
-import { UserRole, useUser } from "../../context/UserContext";
+import { UserRole, useUserContext } from "../../context/UserContext";
 import DropDownMenu from "../dropDownMenu/DropDownMenu";
 import "./ServiceDropDown.css";
 
@@ -22,7 +22,7 @@ export default function ServiceDropDown({
   serviceName,
   serviceMapping,
 }: ServiceDropDownProps) {
-  let user = useUser();
+  let { user } = useUserContext();
 
   function getHeadOfPath(path: string) {
     const parts = path.split("/");
@@ -41,15 +41,16 @@ export default function ServiceDropDown({
   }
 
   return (
+
     <DropDownMenu
       imgSrc={serviceMapping ? serviceMapping.imageData : undefined}
       imgAlt={serviceName}
     >
       {serviceMapping &&
-        serviceMapping.endpoints.map((endpoint, index) => {
+        serviceMapping.endpoints.map((endpoint) => {
           if (displayLink(endpoint.requiredRole))
             return (
-              <div key={index} className="dropdown-item">
+              <div key={endpoint.path} className="dropdown-item">
                 <a href={serviceMapping.bridgeAdress + "/" + endpoint.path}>
                   {getHeadOfPath(endpoint.path)}
                 </a>
@@ -57,5 +58,6 @@ export default function ServiceDropDown({
             );
         })}
     </DropDownMenu>
+  
   );
 }

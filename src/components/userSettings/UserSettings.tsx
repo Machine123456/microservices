@@ -1,16 +1,18 @@
-import { useUser } from '../../context/UserContext';
+import { useUserContext } from '../../context/UserContext';
 import './UserSettings.css'
 
 export default function UserSettings() {
 
-let user = useUser();
+let { user, updateToken } = useUserContext();
+
   
 function logout() {
 
-    fetch('authenticationService/auth/logout')
+    fetch(import.meta.env.VITE_AUTH_SERVER + '/auth/logout')
         .then(response => {
             if (response.status === 200) {
-                window.location.href = '/home';
+                updateToken(null);
+                //window.location.href = '/home';
             }
         })
         .catch(error => {

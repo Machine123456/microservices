@@ -11,7 +11,7 @@ export default function ServicesList() {
   },[]);
 
   async function fetchMapping() {
-    return fetch("authenticationService/auth/getServicesMapping")
+    return fetch(import.meta.env.VITE_AUTH_SERVER + "/auth/getServicesMapping")
       .then((response) => response.json())
       .then((map) => {
         //Map<String, MappingResponse>
@@ -27,9 +27,11 @@ export default function ServicesList() {
 
   return (
     <div className="services-list" ref={listRef}>
-      {servicesMap && Object.entries(servicesMap).forEach(([serviceName, serviceMapping]) => {
-        return <ServiceDropDown serviceName={serviceName} serviceMapping={(serviceMapping as MappingResponse)} />;
+      {servicesMap && Object.entries(servicesMap).map(([serviceName, serviceMapping]) => {
+       //return <div key={serviceName}> {serviceName} </div> 
+       return <ServiceDropDown key={serviceName} serviceName={serviceName} serviceMapping={(serviceMapping as MappingResponse)} />;
       })}
+  
     </div>
   );
 }

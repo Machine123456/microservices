@@ -1,5 +1,5 @@
 
-import { UserRole, useUser } from "../../context/UserContext.tsx";
+import { UserRole, useUserContext } from "../../context/UserContext.tsx";
 import DropDownMenu from "../dropDownMenu/DropDownMenu.tsx";
 import LoginForm from "../loginForm/LoginForm.tsx";
 import ServicesList from "../servicesList/ServicesList.tsx";
@@ -8,7 +8,7 @@ import "./ServicesHeader.css";
 
 export default function ServicesHeader() {
 
-  let user = useUser();
+  let {user} = useUserContext();
   
 
   return (

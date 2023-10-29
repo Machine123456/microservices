@@ -1,13 +1,56 @@
+import { useEffect } from "react";
 import "./App.css";
+import Info from "./components/info/Info";
+import Panel1 from "./components/panel/Panel1";
+import Panel2 from "./components/panel/Panel2";
+import Panel3 from "./components/panel/Panel3";
+
+
+
 import ServicesHeader from "./components/serviceHeader/ServicesHeader";
+import { ThemeData, ThemeProvider, useThemeContext } from "./context/ThemeContext";
 import { UserProvider } from "./context/UserContext";
 
-function App() {
+export default function App() {
   return (
-    <UserProvider>
-      <ServicesHeader />
-    </UserProvider>
+    <ThemeProvider>
+      <UserProvider>
+        <Inner />
+      </UserProvider>
+    </ThemeProvider>
   );
 }
 
-export default App;
+function Inner() {
+
+  let { theme } = useThemeContext();
+
+  useEffect(() => {
+    updateTheme(theme)
+  }, [theme]);
+
+
+  function updateTheme(theme: ThemeData) {
+    var root: HTMLElement | null = document.querySelector(':root');
+
+    if (root) {
+        var rootStyle = root.style;
+        rootStyle.setProperty('--main-color', theme.mainColor);
+        rootStyle.setProperty('--details-color', theme.detailsColor);
+    }
+}
+
+  return (
+    <div className="page">
+      <div className="left-body">
+        <ServicesHeader />
+        <Panel1 />
+        {/*<Panel2/>
+        <Panel3/>*/}
+      </div>
+      <div className="right-body">
+        <Info />
+      </div>
+    </div>
+  );
+}

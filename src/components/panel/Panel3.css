@@ -1,0 +1,125 @@
+#panel3 {
+
+    display: flex;
+    gap: .5em;
+
+    aspect-ratio: 2/1;
+
+    @media (min-width: 700px) {
+        aspect-ratio: 5/2;
+
+    }
+
+    @media (min-width: 1024px) {
+        aspect-ratio: 10/3;
+    }
+
+
+    &>button {
+        all: unset;
+
+        min-width: 1%;
+
+        border: var(--borders-size) solid var(--details-color);
+        border-radius: var(--borders-radius);
+
+        color: var(--details-color);
+        padding: .5em;
+
+        font-weight: bold;
+        text-align: center;
+
+        cursor: pointer;
+
+        @media (max-width: 512px) {
+            display: none;
+        }
+
+        &:hover {
+            background-color: var(--details-color);
+            color: var(--main-color);
+            border-color: var(--main-color);
+        }
+
+    }
+
+    .middle-panel {
+
+        flex-grow: 1;
+        overflow: hidden;
+
+        padding-block: 1%;
+        display: flex;
+
+        justify-content: center;
+
+        .display-wrapper {
+
+            --selected-display: 1;
+            --display-gap: .5em;
+            --num-displays: 1;
+
+            flex-grow: 1;
+
+            --display-width: calc((100% - (var(--display-gap)*(var(--num-displays) - 1)))/var(--num-displays));
+            --display-translate: calc(((var(--num-displays) - 1) * (50% + (var(--display-gap) / 2))) - (100% + var(--display-gap)) * (var(--selected-display) - 1));
+
+            display: flex;
+            align-items: center;
+
+            gap: var(--display-gap);
+
+
+            @media (min-width: 700px) {
+                --num-displays: 2;
+
+            }
+
+            @media (min-width: 1024px) {
+                --num-displays: 3;
+            }
+
+            .display {
+
+                cursor: grab;
+                min-width: var(--display-width);
+                height: 100%;
+                transform: translate(var(--display-translate));
+
+                .display__inner {
+
+                    height: 100%;
+
+                    background-color: lightblue;
+                    border: var(--borders-size) solid var(--details-color);
+                    border-radius: var(--borders-radius);
+
+                    transform: scale(.9);
+                    transition: transform .3s ease-in-out;
+
+                    &.selected {
+                        transform: scale(1);
+                    }
+                }
+
+                &.grabbing {
+                    cursor: grabbing;
+
+                    .display__inner {
+                        background-color: rgb(126, 169, 184);
+                        transform: scale(.95);
+                    }
+
+                }
+
+
+            }
+
+
+
+        }
+
+
+
+    }
+}

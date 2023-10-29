@@ -1,0 +1,29 @@
+#panel1 {
+
+    display: flex;
+    margin-bottom: 5%;
+    justify-content: space-between;
+
+    @media (max-width: 320px) {
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: .5em;
+    }
+
+    & h1 {
+        margin: 0;
+        padding-left: min(50px, 8%);
+        color: var(--details-color);
+
+        max-width: 40%;
+
+        text-align: left;
+        font-size: 30px;
+
+        @media (max-width: 1024px) {
+            max-width:  100%;
+        }
+
+    }
+
+}
