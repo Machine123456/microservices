@@ -7,7 +7,6 @@ export default function Info() {
           <img src="/portrait_background.png" className="portrait-background" />
           <img src="/portrait.png" className="portrait-blur" />
           <img src="/portrait.png" className="portrait" />
-          <p className="lorem"> André Alão </p>
         </div>
         <div className="divider"></div>
         <div className="blocks">

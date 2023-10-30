@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 import "./App.css";
 import Info from "./components/info/Info";
-import Panel1 from "./components/panel/Panel1";
-import Panel2 from "./components/panel/Panel2";
-import Panel3 from "./components/panel/Panel3";
+import Panel1 from "./components/panel/panel1/Panel1";
+import Panel2 from "./components/panel/panel2/Panel2";
+import Panel3 from "./components/panel/panel3/Panel3";
 
 
 
@@ -45,8 +45,8 @@ function Inner() {
       <div className="left-body">
         <ServicesHeader />
         <Panel1 />
-        {/*<Panel2/>
-        <Panel3/>*/}
+        <Panel2/>
+        <Panel3/>
       </div>
       <div className="right-body">
         <Info />

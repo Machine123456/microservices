@@ -1,5 +1,5 @@
-import { Theme, useThemeContext } from "../../context/ThemeContext";
-import ToggleButton from "../toggleButton/ToggleButton";
+import { Theme, useThemeContext } from "../../../context/ThemeContext";
+import ToggleButton from "../../toggleButton/ToggleButton";
 import "./Panel1.css";
 
 export default function Panel1() {

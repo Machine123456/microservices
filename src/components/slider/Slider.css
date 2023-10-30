@@ -1,0 +1,45 @@
+.slider {
+
+    flex-grow: 1;
+    overflow: hidden;
+
+    padding-block: 1%;
+    display: flex;
+
+    justify-content: center;
+
+    .display-wrapper {
+
+        --selected-display: 1;
+        --display-gap: .5em;
+        --num-displays: 1;
+
+        flex-grow: 1;
+
+        --display-width: calc((100% - (var(--display-gap)*(var(--num-displays) - 1)))/var(--num-displays));
+        --display-translate: calc(((var(--num-displays) - 1) * (50% + (var(--display-gap) / 2))) - (100% + var(--display-gap)) * (var(--selected-display) - 1));
+
+        display: flex;
+        align-items: center;
+
+        gap: var(--display-gap);
+
+
+        @media (min-width: 700px) {
+            --num-displays: 2;
+
+        }
+
+        @media (min-width: 1024px) {
+            --num-displays: 3;
+        }
+
+        
+
+
+
+    }
+
+
+
+}

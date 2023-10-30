@@ -1,0 +1,20 @@
+.service-endpoint {
+    padding: .3em;
+
+    & a{
+        text-decoration: none;
+        /* Adjusted text color */
+    
+        &:hover {
+            font-weight: bold;
+            &::before {
+                content: "> ";
+            }
+
+            &::after{
+                content: " <";
+            }
+        }
+    }
+    
+}

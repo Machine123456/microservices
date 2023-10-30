@@ -50,7 +50,7 @@ export default function ServiceDropDown({
         serviceMapping.endpoints.map((endpoint) => {
           if (displayLink(endpoint.requiredRole))
             return (
-              <div key={endpoint.path} className="dropdown-item">
+              <div key={endpoint.path} className="service-endpoint">
                 <a href={serviceMapping.bridgeAdress + "/" + endpoint.path}>
                   {getHeadOfPath(endpoint.path)}
                 </a>

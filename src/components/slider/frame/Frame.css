@@ -1,0 +1,35 @@
+.display {
+
+    cursor: grab;
+    min-width: var(--display-width);
+    height: 100%;
+    transform: translate(var(--display-translate));
+
+    .display__inner {
+
+        height: 100%;
+
+        background-color: lightblue;
+        border: var(--borders-size) solid var(--details-color);
+        border-radius: var(--borders-radius);
+
+        transform: scale(.9);
+        transition: transform .3s ease-in-out;
+
+        &.selected {
+            transform: scale(1);
+        }
+    }
+
+    &.grabbing {
+        cursor: grabbing;
+
+        .display__inner {
+            background-color: rgb(126, 169, 184);
+            transform: scale(.95);
+        }
+
+    }
+
+
+}

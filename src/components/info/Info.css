@@ -6,11 +6,11 @@
 
     padding-inline: 10%;
 
-    color: var(--main-color);
+    color: black;
     text-shadow:
-        1px 1px 2px var(--main-color),
-        0 0 1em var(--details-color),
-        0 0 0.2em var(--details-color);
+        1px 1px 2px black,
+        0 0 1em white,
+        0 0 0.2em white;
 
     @media (max-width: 1024px) {
         width: 30%;
@@ -41,24 +41,6 @@
 
         width: 100%;
         height: 100%;
-    }
-
-    .lorem {
-
-        position: absolute;
-
-        left: 50%;
-        transform: translate(-50%, -150%);
-
-        width: 100%;
-        padding: 0;
-
-        font-size: 25px;
-
-        @media (max-width: 1024px) {
-            display: none;
-        }
-
     }
 
     .portrait-blur,
@@ -128,7 +110,7 @@
         width: 40%;
         margin: 3%;
 
-        border: var(--borders-size) solid var(--main-color);
+        border: var(--borders-size) solid black;
         border-radius: var(--borders-radius);
         box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
 
