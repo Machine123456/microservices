@@ -8,8 +8,9 @@ import Panel3 from "./components/panel/panel3/Panel3";
 
 
 import ServicesHeader from "./components/serviceHeader/ServicesHeader";
-import { ThemeData, ThemeProvider, useThemeContext } from "./context/ThemeContext";
+import { ThemeData, ThemeProvider } from "./context/ThemeContext";
 import { UserProvider } from "./context/UserContext";
+import { useTheme } from "./hooks/useCustomContext";
 
 export default function App() {
   return (
@@ -23,7 +24,7 @@ export default function App() {
 
 function Inner() {
 
-  let { theme } = useThemeContext();
+  let { theme } = useTheme();
 
   useEffect(() => {
     updateTheme(theme)

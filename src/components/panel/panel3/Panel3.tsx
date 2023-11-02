@@ -1,17 +1,17 @@
 import { useRef } from "react";
-import Slider, { SliderMethods } from "../../slider/Slider";
+import Slider, { SliderRef } from "../../slider/Slider";
 import "./Panel3.css";
 
 export default function Panel3() {
 
-    const slider = useRef<SliderMethods>(null);
+    const slider = useRef<SliderRef>(null);
 
     function swipeLeft() {
-        slider.current && slider.current.swipeLeft(new Event('swipe'));
+        slider?.current?.swipeLeft(new Event('swipe'));
     }
 
     function swipeRight() {
-        slider.current && slider.current.swipeRight(new Event('swipe'));
+        slider?.current?.swipeRight(new Event('swipe'));
     }
 
 

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "./ToggleButton.css";
 
-interface ToggleButtonProps extends React.HTMLAttributes<Element> {
+type ToggleButtonProps = {
     toggle:(active: boolean) => any;
   }
 

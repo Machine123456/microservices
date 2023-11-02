@@ -1,10 +1,22 @@
 import { useEffect, useRef, useState } from "react";
 import "./ServicesList.css";
-import ServiceDropDown, { MappingResponse } from "../serviceDropDown/ServiceDropDown";
+import ServiceDropDown from "../serviceDropDown/ServiceDropDown";
+
+type Endpoint = {
+  path: string;
+  requiredRole: string; // "ADMIN", "USER", ""
+}
+
+export type MappingResponse = {
+  imageData: string;
+  endpoints: Endpoint[];
+  bridgeAdress: string;
+}
+
 
 export default function ServicesList() {
   const listRef = useRef<HTMLDivElement | null>(null);
-  const [servicesMap, setServicesMaps] = useState(null);
+  const [servicesMap, setServicesMaps] = useState<Record<string,MappingResponse>>();
 
   useEffect(() => {
     fetchMapping();
@@ -15,13 +27,13 @@ export default function ServicesList() {
       .then((response) => response.json())
       .then((map) => {
         //Map<String, MappingResponse>
-
-        if (!map || Object.keys(map).length === 0) return;
-
-        setServicesMaps(map);
+        if (!map || Object.keys(map).length === 0) 
+          return;
+        
+        setServicesMaps(map as Record<string,MappingResponse>);
       })
       .catch((error) => {
-        console.error("Error fetching mapps:", error);
+        console.error("Error fetching mapps: ", error);
       });
   }
 

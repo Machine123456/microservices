@@ -1,21 +1,22 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useState } from "react";
 
-export interface ThemeData {
+export type ThemeData = {
     mainColor: string;
     detailsColor: string;
 }
 
 export enum Theme { Day, Night }
 
-interface ThemeContextValues {
+type ThemeContextValues = {
     theme: ThemeData
     setTheme: (theme: Theme) => any
 }
 
-interface ThemeProviderProps extends React.HTMLAttributes<Element> {
+type ThemeProviderProps = {
     children: React.ReactNode;
     // add any custom props, but don't have to specify `children`
 }
+
 const themes: { [key in Theme]: ThemeData } = {
     [Theme.Night]: {
         mainColor: "black",
@@ -31,18 +32,14 @@ const defaultTheme: Theme = Theme.Night;
 
 const defaultContext: ThemeContextValues = {
     theme: themes[defaultTheme],
-    setTheme: (_) => {} 
+    setTheme: (_) => { }
 };
 
-const ThemeContext = createContext<ThemeContextValues>(defaultContext);
+export const ThemeContext = createContext<ThemeContextValues>(defaultContext);
 
 export const ThemeProvider = ({ children }: ThemeProviderProps) => {
 
-   
     var [activeTheme, setActiveTheme] = useState<Theme>(defaultTheme);
-   
-    
-    
 
     const contextValues: ThemeContextValues = {
         theme: themes[activeTheme],
@@ -55,11 +52,3 @@ export const ThemeProvider = ({ children }: ThemeProviderProps) => {
         </ThemeContext.Provider>
     );
 };
-
-export function useThemeContext() {
-    const context = useContext(ThemeContext);
-    if (context === undefined) {
-        throw new Error("Context must be used within a Provider");
-    }
-    return context;
-}

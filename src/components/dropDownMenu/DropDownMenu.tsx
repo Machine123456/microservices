@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import "./DropDownMenu.css";
 
-interface DropDownMenuProps extends React.HTMLAttributes<Element> {
+type DropDownMenuProps = {
   children: React.ReactNode;
   imgSrc?: string;
   startActive?: boolean;
@@ -26,10 +26,10 @@ export default function DropDownMenu({
     };
 
     setDropdown(isActive);
-    document.addEventListener("click", handleClick);
+    document.addEventListener("mousedown", handleClick);
 
     return () => {
-      document.removeEventListener("click", handleClick);
+      document.removeEventListener("mousedown", handleClick);
     };
   }, []);
 

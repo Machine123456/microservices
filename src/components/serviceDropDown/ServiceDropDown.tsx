@@ -1,19 +1,10 @@
-import { UserRole, useUserContext } from "../../context/UserContext";
+import { UserRole } from "../../context/UserContext";
+import { useUser } from "../../hooks/useCustomContext";
 import DropDownMenu from "../dropDownMenu/DropDownMenu";
+import { MappingResponse } from "../servicesList/ServicesList";
 import "./ServiceDropDown.css";
 
-interface Endpoint {
-  path: string;
-  requiredRole: string; // "ADMIN", "USER", ""
-}
-
-export interface MappingResponse {
-  imageData: string;
-  endpoints: Endpoint[];
-  bridgeAdress: string;
-}
-
-interface ServiceDropDownProps extends React.HTMLAttributes<Element> {
+type ServiceDropDownProps = {
   serviceName: string;
   serviceMapping: MappingResponse;
 }
@@ -22,7 +13,7 @@ export default function ServiceDropDown({
   serviceName,
   serviceMapping,
 }: ServiceDropDownProps) {
-  let { user } = useUserContext();
+  let { user } = useUser();
 
   function getHeadOfPath(path: string) {
     const parts = path.split("/");
@@ -32,9 +23,9 @@ export default function ServiceDropDown({
   function displayLink(linkReq: String): boolean {
     switch (linkReq) {
       case "ADMIN":
-        return user.userRole === UserRole.Admin;
+        return user.role === UserRole.Admin;
       case "USER":
-        return user.userRole != UserRole.None;
+        return user.role != UserRole.None;
       default:
         return true;
     }

@@ -1,34 +1,17 @@
-import { useUserContext } from '../../context/UserContext';
+import { UserRole } from '../../context/UserContext'
 import './UserSettings.css'
 
-export default function UserSettings() {
-
-let { user, updateToken } = useUserContext();
-
-  
-function logout() {
-
-    fetch(import.meta.env.VITE_AUTH_SERVER + '/auth/logout')
-        .then(response => {
-            if (response.status === 200) {
-                updateToken(null);
-                //window.location.href = '/home';
-            }
-        })
-        .catch(error => {
-            console.error('Error during logout:', error);
-        });
+type UserSettingsProps = {
+    role: UserRole;
+    name: string;
+    email: string;
 }
 
-    return <>
-            <div className="user-info" id="userName">{user.name}</div>
-            <div className="user-info" id="userEmail">{user.email}</div>
-            <div className="user-info" id="userRole">Role: {user.userRole}</div>
+export default function UserSettings({role, name, email}:UserSettingsProps) {
 
-            <div className="divider"></div>
-            <button className="logout-btn" onClick={logout}>
-              Logout
-            </button>
-            <div className="divider"></div>
-    </>
+    return <>
+            <div className="user-info" id="userName">{name}</div>
+            <div className="user-info" id="userEmail">{email}</div>
+            <div className="user-info" id="userRole">{role}</div>
+        </>
 }

@@ -1,0 +1,19 @@
+.loading {
+    width: 40px;
+    aspect-ratio: 1;
+
+    border: 5px solid #aae2d4;
+    border-top: 5px solid #3498db;
+    border-radius: 50%;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}

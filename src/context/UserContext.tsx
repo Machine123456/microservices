@@ -1,44 +1,53 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useEffect, useRef, useState } from "react";
 import { CookieOptions, addCookie, getCookie, removeCookie } from "../utils/Cookies";
 
-export enum UserRole { None, User, Admin }
+export enum UserRole { 
+  None = "Not a User", 
+  User = "User", 
+  Admin = "Admin User" }
 
-interface User {
-  userRole: UserRole;
+type User = {
+  role: UserRole;
   name: string;
   email: string;
 }
 
-interface UserContextValues {
+type UserContextValues = {
   user: User
   updateToken: Function
+  isLoading: boolean
 }
 
-interface UserProviderProps extends React.HTMLAttributes<Element> {
+type UserProviderProps = {
   children: React.ReactNode;
-  // add any custom props, but don't have to specify `children`
 }
 
-const defaultUser: User = {
-  userRole: UserRole.None,
-  name: "",
-  email: "",
+const defaultContext: UserContextValues = {
+  user: {
+    role: UserRole.None,
+    name: "",
+    email: "",
+  },
+  updateToken: (_: string) => { },
+  isLoading: true
 };
-
-const defaultContext : UserContextValues= {
-  user: defaultUser,
-  updateToken: (_: string) => {}
-};
-
 
 const USER_TOKEN_COOKIE_NAME = "token";
 
-const UserContext = createContext<UserContextValues>(defaultContext);
+export const UserContext = createContext<UserContextValues>(defaultContext);
 
 export const UserProvider = ({ children }: UserProviderProps) => {
 
-  var [accessToken, setToken] = useState<String | null>(getCookie(USER_TOKEN_COOKIE_NAME));
-  var [user, setUser] = useState<User>(defaultUser);
+  const [accessToken, setToken] = useState<String | null>(getCookie(USER_TOKEN_COOKIE_NAME));
+
+  const [user, setUser] = useState<User>(defaultContext.user);
+  const [isLoading, setIsLoading] = useState<boolean>(defaultContext.isLoading);
+
+  const abortControllerRef = useRef<AbortController | null>(null);
+
+  useEffect(() => {
+    fetchData();
+  }, [accessToken]);
 
   function updateToken(token: string) {
 
@@ -62,9 +71,14 @@ export const UserProvider = ({ children }: UserProviderProps) => {
 
   async function fetchData() {
 
-    const userData: User = !accessToken ? defaultUser : await fetch(
+    abortControllerRef.current?.abort();
+    abortControllerRef.current = new AbortController();
+
+    setIsLoading(true);
+    const userData: User = !accessToken ? defaultContext.user : await fetch(
       import.meta.env.VITE_AUTH_SERVER + "/auth/getUserFromToken",
       {
+        signal: abortControllerRef.current?.signal,
         method: "GET",
         headers: {
           "Authorization": "Bearer " + accessToken,
@@ -73,36 +87,36 @@ export const UserProvider = ({ children }: UserProviderProps) => {
       })
       .then((response) => response.json())
       .then((userObj) => {
-
-        if (userObj.hasError) {
-          console.error("Error fetching user from token: ", userObj.errorMsg);
-          return defaultUser;
-
-        }
+        
+        if (userObj.hasError) 
+          throw new Error(userObj.errorMessage);
+        
         return {
           name: userObj.username,
           email: userObj.email,
-          userRole: !userObj.authorities.includes("ROLE_ADMIN")
+          role: !userObj.authorities.includes("ROLE_ADMIN")
             ? UserRole.User
             : UserRole.Admin,
         };
       })
-      .catch((error) => {
-        console.error("Error fetching user from token: ", error);
-        return defaultUser;
+      .catch((e) => {
+        //aborted calls goes here
+        console.error("Error fetching user from token: ", e);
+        return defaultContext.user;
       });
 
+
+    //await (new Promise(resolve => setTimeout(resolve,3000)));
+
     setUser(userData);
+    setIsLoading(false);
   }
 
   const contextValues: UserContextValues = {
     user,
     updateToken,
+    isLoading,
   };
-
-  useEffect(() => {
-    fetchData();
-  }, [accessToken]);
 
   return (
     <UserContext.Provider value={contextValues}>
@@ -110,11 +124,3 @@ export const UserProvider = ({ children }: UserProviderProps) => {
     </UserContext.Provider>
   );
 };
-
-export function useUserContext() {
-  const context = useContext(UserContext);
-  if (context === undefined) {
-    throw new Error("Context must be used within a Provider");
-  }
-  return context;
-}

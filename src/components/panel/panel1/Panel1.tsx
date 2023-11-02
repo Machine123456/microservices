@@ -1,10 +1,11 @@
-import { Theme, useThemeContext } from "../../../context/ThemeContext";
+import { Theme } from "../../../context/ThemeContext";
+import { useTheme } from "../../../hooks/useCustomContext";
 import ToggleButton from "../../toggleButton/ToggleButton";
 import "./Panel1.css";
 
 export default function Panel1() {
     
-    let { setTheme } = useThemeContext();
+    let { setTheme } = useTheme();
 
     function updateTheme(isDay: boolean) {
         setTheme(isDay ? Theme.Day : Theme.Night);

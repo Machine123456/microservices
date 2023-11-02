@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import "./Frame.css";
 
-interface FrameProps extends React.HTMLAttributes<Element> {
+type FrameProps = {
     num: number
     isSelected: boolean
     onSlide: (side: -1 | 1) => any

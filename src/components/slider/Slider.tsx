@@ -3,7 +3,7 @@ import "./Slider.css";
 import Frame from "./frame/Frame";
 
 
-interface SliderData {
+type SliderData = {
     numDisplays: number
     centerDisplay: number
     startOrderList: number[]
@@ -12,12 +12,12 @@ interface SliderData {
     swipeTick: number
 }
 
-export interface SliderMethods {
+export type SliderRef = {
     swipeRight(event: Event): void;
     swipeLeft(event: Event): void;
   }
 
-const Slider = forwardRef<SliderMethods>((_, ref) => {
+const Slider = forwardRef<SliderRef>((_, ref) => {
 
     const data: SliderData = {
         numDisplays: 6,
@@ -71,8 +71,6 @@ const Slider = forwardRef<SliderMethods>((_, ref) => {
     }
 
     function swipe(num: -1 | 1) {
-
-       
 
         if (currentSlider)
             return;
