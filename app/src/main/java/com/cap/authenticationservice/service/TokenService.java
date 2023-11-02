@@ -3,10 +3,7 @@ package com.cap.authenticationservice.service;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -81,11 +78,6 @@ public class TokenService {
     public void invalidateToken(String token) {
         invalidTokens.add(token);
     }
-
-    private Instant genExpirationDate(int seconds) {
-        return LocalDateTime.now().plusSeconds(seconds).toInstant(ZoneOffset.of("+01:00"));
-    }
-
     public String recoverToken(HttpServletRequest request) {
 
         var tokenParam = request.getParameter("token");
