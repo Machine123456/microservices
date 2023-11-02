@@ -54,8 +54,14 @@ public class SecurityFiler extends OncePerRequestFilter {
             return false;
         }
 
-        var username = tokenService.validateToken(token);
-        var opt = userRepository.findByUsername(username);
+        var tokenResult = tokenService.validateToken(token);
+
+        if(!tokenResult.isPresent()) {
+            System.out.println("Authentication token not valid: " + token + "\n" + tokenResult.getErrorMsg());
+            return false;
+        }
+
+        var opt = userRepository.findByUsername(tokenResult.get());
 
         if(opt.isPresent()){
             UserDetails user = opt.get();

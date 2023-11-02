@@ -49,6 +49,7 @@ public class AuthenticationController{
         }
     }
 
+    @CrossOrigin
     @PostMapping("/login")
     @ResponseBody
     public ResponseEntity<String> loginUser(@RequestBody UserRequest userRequest, HttpServletResponse response) {
@@ -102,12 +103,16 @@ public class AuthenticationController{
     @ResponseBody
     public ResponseEntity<UserResponse> getUserFromToken(HttpServletRequest request) {
         try {
-            String token = tokenService.recoverToken(request);
-            String uname = tokenService.validateToken(token);//URLDecoder.decode(token, "UTF-8"));
-            var user = userService.findUserByUsername(uname);
+            var token = tokenService.recoverToken(request);
+            var tokenResult = tokenService.validateToken(token);//URLDecoder.decode(token, "UTF-8"));
+
+            if(!tokenResult.isPresent())
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(UserResponse.ofError(tokenResult.getErrorMsg()));
+
+            var user = userService.findUserByUsername(tokenResult.get());
             return ResponseEntity.ok(user);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(null);
+            return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(UserResponse.ofError(e.getMessage()));
         }
     }
 
@@ -152,6 +157,7 @@ public class AuthenticationController{
         return ResponseEntity.ok(authService.getBridgeHostname());
     }
 
+    @CrossOrigin
     @GetMapping("/getUserRequirements")
     @ResponseBody
     public ResponseEntity<Map<String,Map<String,String>>> getUserRequirements() {
