@@ -12,6 +12,11 @@ docker build -t andrealao/microservices:product-service-test .
 
 cd ..
 
+cd ./frontend-service
+docker build -t andrealao/microservices:frontend-service-test .
+
+cd ..
+
 cd ./main
 docker compose -p microservices up
 
