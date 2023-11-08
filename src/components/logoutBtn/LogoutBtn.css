@@ -1,0 +1,18 @@
+.logout-btn {
+    all: unset;
+
+    color: var(--bar-feedback-color);
+    cursor: pointer;
+
+    text-align: center;
+    font-weight: normal;
+    transition: font-weight 0.2s;
+
+    &:hover {
+        font-weight: bold;
+    }
+
+    &:focus {
+        outline: revert;
+    }
+}

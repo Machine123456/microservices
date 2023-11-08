@@ -1,0 +1,36 @@
+.toggle-bg {
+    min-width: 70px;
+   
+    --inner-margin: 5%;
+    --border-radius: 20px;
+
+    aspect-ratio: 2/1;
+    background-color: var(--details-color2);
+    border-radius: var(--border-radius);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    overflow: hidden;
+    .inner{
+        width: calc(100% - 2*var(--inner-margin));
+        border-radius: var(--border-radius);
+      
+        .selector {
+            width: 50%;
+            aspect-ratio: 1/1;
+            border-radius: 50%;
+         
+            background-color: var(--main-color2);
+            transform: translateX(calc(0% - 2*var(--inner-margin)));
+            transition: transform 0.2s ease;
+
+            &.active{
+                transform: translateX(calc(100% - 2*var(--inner-margin)));
+            }
+        }
+    }
+
+    
+}

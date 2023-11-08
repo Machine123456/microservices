@@ -1,0 +1,16 @@
+
+.form-body {
+
+    .formInfo {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        margin-block: .3em;
+        width: 100%;
+        
+        gap: 3px;
+    }
+    
+  }
+  

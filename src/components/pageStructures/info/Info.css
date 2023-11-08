@@ -1,0 +1,122 @@
+.content {
+    padding: .3em;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    gap: .5em;
+
+    .lorem {
+        text-align: center;
+        font-family: cursive;
+        line-height: 1em;
+        font-size: 15px;
+
+        padding-inline: 1em;
+
+        color: black;
+        text-shadow:
+            1px 1px 2px black,
+            0 0 1em white,
+            0 0 0.2em white;
+    }
+
+    .frame {
+        position: relative;
+        --img-scale: 1.2;
+        width: 80%;
+
+        .portrait-background {
+            position: relative;
+            width: 100%;
+
+            transform: translate(5%, -1.5%) scale(var(--img-scale));
+        }
+
+        .portrait-blur,
+        .portrait {
+            position: absolute;
+            width: 50%;
+
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -40%) scale(var(--img-scale)) rotateY(180deg);
+        }
+
+
+        .portrait-blur {
+            filter: brightness(0) invert(1) blur(5px);
+            -webkit-filter: brightness(0) invert(1) blur(5px);
+        }
+    }
+
+    .blocks {
+
+        display: flex;
+        flex-wrap: wrap;
+
+        width: 100%;
+
+        align-items: stretch;
+        justify-content: center;
+
+        gap:1em;
+
+        .block {
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            min-width: 40%; 
+            aspect-ratio: 1/1;
+
+            border: var(--borders-size) solid black;
+            border-radius: var(--borders-radius);
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+
+        }
+    }
+
+}
+
+
+
+@media (max-width: 1024px) {
+    .content {
+        flex-wrap: wrap;
+
+        flex-direction: row;
+        justify-content: space-around;
+
+        .frame {
+            --img-scale: 1.2;
+            
+            width: min(max(20%, 250px), 100%);
+
+            .portrait-blur,
+            .portrait {
+
+                transform:
+                    translate(-50%, -40%) 
+                    scale(var(--img-scale)) 
+                    rotateY(0);
+            }
+        }
+
+        .lorem {
+            width: 50%;
+        }
+
+        .blocks {
+            order: 1;
+
+            .block {
+                min-width: max(15%,100px);
+            }
+        }
+    }
+
+}

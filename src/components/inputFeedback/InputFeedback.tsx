@@ -1,14 +1,15 @@
 import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
-import { capitalizeFirstLetter } from "../../utils/Funcs";
-import Feedback from "../feedback/Feedback";
 import "./InputFeedback.css";
-import { useRegValidations } from "../../hooks/useCustomContext";
+import { useShake } from "./InputFeedback.hooks";
+import Feedback from "../utils/feedback/Feedback";
 
 
 type InputFeedbackProps = {
     type?: React.HTMLInputTypeAttribute,
+    validate: (value: any) => string,
+    onChange?: (value: string) => void,
     name: string,
-    onChange?: (state: InputState) => void,
+    placeHolder: string
   }
 
   export type InputFeedbackRef = {
@@ -17,79 +18,40 @@ type InputFeedbackProps = {
     toggleShake: () => void
   }
 
-  type InputState = {
-    value: string
-    feedback: string
-  }
 
-const InputFeedback = forwardRef<InputFeedbackRef,InputFeedbackProps>(({ type = "text", name, onChange }, ref) => {
+const InputFeedback = forwardRef<InputFeedbackRef,InputFeedbackProps>(({ type = "text",name,placeHolder, validate, onChange }, ref) => {
 
-    const {fieldsValidations,isLoading: isValidationsLoading} = useRegValidations();
-    const [inputState,setInputState] = useState<InputState>({value:"",feedback:""});
-    const [shake, setShake] = useState(false);
+    const [value,setValue] = useState<any>("");
+    const [feedback,setFeedback] = useState<any>("");
+
+    const {shake, toggleShake} = useShake();
+
+    useEffect(() => {
+      setFeedback(validate(value));
+    }, 
+    [validate])
 
     useEffect(()=> {
-        onChange?.(inputState);
-    }, [inputState]);
+        onChange?.(value);
+    }, [value]);
     
     useImperativeHandle(ref, () => ({
         isValid,
-        value: inputState.value,
+        value: value,
         toggleShake
       }));
-
-    const toggleShake = () => {
-        
-        setShake(false);
-
-        requestAnimationFrame(() => {
-            requestAnimationFrame(() => {
-                setShake(true);
-            });
-        });
-    }
-
-    const isValid = inputState.feedback === "";
     
-    const validateField = (value:any): string => {
-       
-        if(isValidationsLoading || value.toString() == "")
-            return "";
+    const isValid = feedback === "" && value != "";
 
-        var finalValidationMsg = "";
-
-        fieldsValidations.forEach(({fieldName,validations}) => {  
-            if(fieldName === name) {
-                validations.forEach(({regexString,errorMsg}) => {
-                    var regex = new RegExp(regexString);
-                    if (!regex.test(value.toString()))
-                        finalValidationMsg += errorMsg + "\n"  
-                });
-                return;
-            }
-        });
-
-        return finalValidationMsg;
-        
+    const handleChange = (newValue:any) => {
+        setValue(newValue);
+        setFeedback(validate(newValue));
     }
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-
-        var feedbackMsg = validateField(e.target.value);
-
-        setInputState(
-            {
-                value: e.target.value,
-                feedback: feedbackMsg
-            }
-        );
-    }
-
 
     return (
         <div className={"field " + (isValid ? "" : "invalid")}>
-            <input className={shake ? "shake": ""} type={type} name={name} placeholder={capitalizeFirstLetter(name)} onChange={handleChange}/>
-            <Feedback str={inputState.feedback} />
+            <input className={shake ? "shake": ""} type={type} name={name} placeholder={placeHolder} onChange={(e) => handleChange(e.target.value)}/>
+            <Feedback str={feedback} />
         </div>
     );
 

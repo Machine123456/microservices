@@ -1,0 +1,22 @@
+.wrapper {
+
+    .dropdown-content {
+        translate: -85%;
+    }
+}
+
+.user-content {
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    .divider {
+        width: 100%;
+        border-bottom: 1px solid var(--details-color2);
+        /* Adjusted color */
+        margin-block: 5px;
+    }
+
+}

@@ -1,0 +1,29 @@
+.form-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  
+    margin: .5em;
+    gap: .3em;
+  
+    & h2 {
+      margin: 0px;
+      margin-bottom: .1em;
+    }
+  
+    & input {
+      padding: .4em;
+      border: 1px solid #ccc;
+    }
+  
+    .feedback {
+      font-size: 12px;
+      margin-block: .5em;
+    }
+  
+    .loading {
+      width: 40px;
+      margin-top: 7px;
+    }
+  }
+  

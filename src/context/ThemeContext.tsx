@@ -3,6 +3,8 @@ import { createContext, useState } from "react";
 export type ThemeData = {
     mainColor: string;
     detailsColor: string;
+    mainColor2: string;
+    detailsColor2: string;
 }
 
 export enum Theme { Day, Night }
@@ -20,11 +22,15 @@ type ThemeProviderProps = {
 const themes: { [key in Theme]: ThemeData } = {
     [Theme.Night]: {
         mainColor: "black",
-        detailsColor: "#fff"
+        mainColor2: "gray",
+        detailsColor: "#ded0b2",
+        detailsColor2: "#f0f0f0",
     },
     [Theme.Day]: {
-        mainColor: "#fff",
-        detailsColor: "black"
+        mainColor: "#f0f0f0",
+        mainColor2: "gray",
+        detailsColor: "black",
+        detailsColor2: "#ded0b2",
     }
 }
 

@@ -1,0 +1,61 @@
+.info {
+    position: relative;
+    width: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .label {
+        background-color: yellow;
+        border: 1px solid black;
+        border-radius: 50%;
+
+        width: 20px;
+        height: 20px;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        & p {
+            color: black;
+            font-size: 1rem;
+            font-weight: bold;
+        }
+
+        &:hover {
+
+            & + .message {
+                visibility: visible;
+            }
+        }
+    }
+
+    .message {
+        position: absolute;
+    
+        font-size: .75rem;
+    
+        background-color: rgb(231, 231, 146);
+        border: 1px solid black;
+        border-radius: 10px;
+    
+        padding: .2em;
+        z-index: 1;
+    
+        visibility: hidden;
+
+        &:hover { 
+            visibility: visible;
+        }
+    }
+
+ 
+
+
+
+
+}
+
+

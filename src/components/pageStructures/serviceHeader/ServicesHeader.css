@@ -1,0 +1,19 @@
+.top-bar {
+    width: 100%;
+    background-color: #333;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .bar-content{
+
+        width: var(--page-width);
+        margin: 2px;
+
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+}
