@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import "./popupMenu.css";
-import CloseBtn1 from "../buttons/closeBtn1/CloseBtn1";
+import { CloseBtn1 } from "../buttons/submitBtn/CustomBtn";
 
 type PopupMenuProps = {
   children?: React.ReactNode;

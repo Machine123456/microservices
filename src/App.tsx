@@ -1,10 +1,8 @@
-import { useEffect } from "react";
 import "./App.css";
 
 import ServicesHeader from "./components/pageStructures/servicesHeader/ServicesHeader";
-import { ThemeData, ThemeProvider } from "./context/ThemeContext";
+import { ThemeProvider } from "./context/ThemeContext";
 import { UserProvider } from "./context/UserContext";
-import { useTheme } from "./hooks/useCustomContext";
 import { LanguageProvider } from "./context/LanguageContext";
 import MainPage from "./components/pageStructures/mainPage/MainPage";
 

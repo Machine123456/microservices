@@ -14,7 +14,7 @@ export const ClickBtn1 = (props: ClickBtnProps) => {
 
     const {text, ...btnProps} = props;
     return (
-        <button {...btnProps} className="click-btn1" >
+        <button {...btnProps} className="submit-btn1" >
             {capitalizeFirstLetter(text?.toLowerCase())}
         </button>
     );

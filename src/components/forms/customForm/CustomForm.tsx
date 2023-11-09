@@ -1,4 +1,4 @@
-import { ReactElement, useEffect, useRef } from "react";
+import { ReactElement } from "react";
 import "./CustomForm.css";
 import LoadingCircle from "../../utils/loadingCircle/LoadingCircle";
 import Feedback from "../../utils/feedback/Feedback";
