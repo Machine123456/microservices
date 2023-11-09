@@ -1,7 +1,18 @@
-.user-info {
-  padding: 5px;
-  text-decoration: none;
-  /* Adjusted text color */
+.user-settings {
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  
+  .user-info {
+    padding: 5px;
+    text-decoration: none;
+    /* Adjusted text color */
+  }
+  
 }
+
+
 
 

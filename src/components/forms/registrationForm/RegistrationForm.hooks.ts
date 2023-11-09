@@ -6,21 +6,28 @@ import { useFetch } from "../../../hooks/useFetch";
 
 
 
-export function useRegistration() {
+export function useRegistration(handleResult: (sucess:boolean) => any) {
 
-    const [feedback, setFeedback] = useState<string>("");
+    const [feedback, setFeedback] = useState("");
+
+    const setFeedbackStatus = (hasError:boolean, text:string) => {
+        setFeedback(text);
+        handleResult(!hasError);
+    }
     const {textData} = useLanguage()
     const { doFetch, isLoading } = useFetch({
         name: "register",
         onError: (error) => {
             console.error('Error during registration:', error);
-            setFeedback(textData.registrationForm.feedback.onServerFail);
+            setFeedbackStatus(true,textData.registrationForm.feedback.onServerFail);
             //setFeedback("Error during registration, check logs for more info");
         },
         onData: (data) => {
             data.text()
-            .then(res => 
-                setFeedback(data.status === 200 ? textData.registrationForm.feedback.onSuccess + " " + res : textData.registrationForm.feedback.onFail + res)
+            .then(res =>
+                data.status === 200 ?  
+                setFeedbackStatus(false,textData.registrationForm.feedback.onSuccess + " " + res) : 
+                setFeedbackStatus(true,textData.registrationForm.feedback.onFail + res)
                 //setFeedback(data.status === 200 ?"User registered successfully with token: " + res : res)
             );
         }
@@ -30,7 +37,7 @@ export function useRegistration() {
     async function register(postBody: {}) {
 
         if (!postBody || Object.keys(postBody).length === 0) {
-            setFeedback(textData.registrationForm.feedback.bodyNotFound);
+            setFeedbackStatus(true,textData.registrationForm.feedback.bodyNotFound);
             //setFeedback("No post body found");
             return;
         };

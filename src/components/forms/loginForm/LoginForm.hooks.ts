@@ -2,25 +2,25 @@ import { useState } from "react";
 import { useLanguage, useUser } from "../../../hooks/useCustomContext";
 import { useFetch } from "../../../hooks/useFetch";
 
-export function useLogin() {
+export function useLogin(handleResult: (sucess:boolean) => any) {
 
   const {textData} = useLanguage()
   
   const { doFetch, isLoading } = useFetch({
     name: "login",
     onError: (error) => {
-      setFeedback(textData.loginForm.feedback.onServerFail);
+      setFeedBackStatus(true,textData.loginForm.feedback.onServerFail);
       //setFeedback("Error during login, check logs for more info");
       console.error("Error during login:", error);
     },
     onData: (data) => {
       data.text().then((text) => {
         if (data.status === 200) {
-          setFeedback(textData.loginForm.feedback.onSuccess);
+          setFeedBackStatus(false,textData.loginForm.feedback.onSuccess);
           //setFeedback("Login Successfully");
           updateToken(text);
         } else {
-          setFeedback(textData.loginForm.feedback.onFail + " " + data.status + ": " + text);
+          setFeedBackStatus(true,textData.loginForm.feedback.onFail + " " + data.status + ": " + text);
           //setFeedback("error " + data.status + ": " + text);
         }
 
@@ -28,6 +28,12 @@ export function useLogin() {
     }
   });
   const [feedback, setFeedback] = useState("");
+
+  const setFeedBackStatus = (hasError: boolean, text:string) => {
+    handleResult(!hasError);
+    setFeedback(text);
+  }
+
   let { updateToken } = useUser();
 
   async function login(username: string | undefined, password: string | undefined) {

@@ -28,7 +28,7 @@ export function useMapps() {
 
           setServicesMaps(map as Record<string, MappingResponse>);
         });
-        console.log("Mapps fetched");
+        /*console.log("Mapps fetched");*/
         
       }
       catch (error) {

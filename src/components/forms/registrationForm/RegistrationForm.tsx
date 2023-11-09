@@ -7,24 +7,24 @@ import InputFeedback from "../../inputFeedback/InputFeedback";
 import { RegValidationsProvider } from "../../../context/RegValidationsContext";
 import CustomForm from "../customForm/CustomForm";
 import { useLanguage } from "../../../hooks/useCustomContext";
-import LanguageSelector from "../../utils/enumSelector/languageSelector/LanguageSelector";
 
 type RegistrationFormProps = {
     submitButton: ReactElement;
-    onChange: (isValid: boolean) => any
+    onChange?: (isValid: boolean) => any,
+    handleResult?: (sucess:boolean) => any
 }
 
-const Inner = ({ submitButton, onChange }: RegistrationFormProps) => {
+const Inner = ({ submitButton, onChange, handleResult }: RegistrationFormProps) => {
 
     const { everyFieldWithContent, postBodyFields, validateFields } = usePostBodyFields();
-    const { register, isLoading: isLoadingRegister, feedback } = useRegistration();
+    const { register, isLoading: isLoadingRegister, feedback } = useRegistration((sucess) => handleResult?.(sucess));
     const { getFieldValidationFunction, hasError: hasErrorOnLoadingValidationFields, isLoading: isLoadingFieldsValidations } = useFieldsValidation();
 
     const { textData } = useLanguage();
 
     const handleChange = (fieldName: string, newValue: string) => {
         var isValid = everyFieldWithContent();
-        onChange(isValid);
+        onChange?.(isValid);
     }
 
     async function hadleRegEvent() {
@@ -36,7 +36,6 @@ const Inner = ({ submitButton, onChange }: RegistrationFormProps) => {
 
         register(postBody);
     }
-
 
     const formInputs = (
         <>
@@ -60,11 +59,11 @@ const Inner = ({ submitButton, onChange }: RegistrationFormProps) => {
                 title={textData.registrationForm.form.title}
                 formInputs={formInputs}
                 submitButton={submitButton}
-                formStatus={{ feedback, isLoading: isLoadingRegister, submit: hadleRegEvent }} />
-
-            <div style={{ width: "90%",margin:".6em"}}>
-                <LanguageSelector />
-            </div>
+                formStatus={{ 
+                    feedback, 
+                    isLoading: isLoadingRegister, 
+                    submit: hadleRegEvent
+                    }} />
           
         </>
     );

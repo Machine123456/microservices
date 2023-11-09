@@ -1,0 +1,40 @@
+.popup-menu {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+
+  top:0;
+  left: 0;
+
+  z-index: 10;
+
+  backdrop-filter: blur(10px);
+
+  display: flex;
+  justify-content: center;
+  align-items: start;
+
+  .menu {
+    position: relative;
+    margin-top: 2em;
+
+    padding: .6em;
+
+    width: auto;
+
+    background-color: white;
+    border: 2px solid black;
+    border-radius: 10px;
+
+    .corner-pos {
+        position: absolute;
+
+        top: -.4em;
+        right: -.4em;
+    }
+
+    .content {
+        /*overflow: hidden;*/
+    }
+  }
+}

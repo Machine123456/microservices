@@ -1,9 +1,9 @@
-import "./ServicesList.css";
+import "./ServicesMenu.css";
 import ServiceDropDown from "../../../dropDownMenu/serviceDropDown/ServiceDropDown";
-import { MappingResponse, useMapps } from "./ServicesList.hooks";
+import { MappingResponse, useMapps } from "./ServicesMenu.hooks";
 import LoadingCircle from "../../../utils/loadingCircle/LoadingCircle";
 
-export default function ServicesList() {
+export default function ServiceMenu() {
 
   const { servicesMap, isLoading } = useMapps();
   return (

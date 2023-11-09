@@ -9,6 +9,7 @@
     transition: font-weight 0.2s;
 
     &:hover {
+        color: #e74c3c;
         font-weight: bold;
     }
 

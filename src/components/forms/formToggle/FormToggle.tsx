@@ -1,47 +1,62 @@
 import "./FormToggle.css";
 import RegistrationForm from "../registrationForm/RegistrationForm";
 import LoginForm from "../loginForm/LoginForm";
-import { capitalizeFirstLetter } from "../../../utils/Funcs";
 import { FormType, useToggle } from "./FormToggle.hooks";
 import { useState } from "react";
 import { useLanguage } from "../../../hooks/useCustomContext";
+import { ClickBtn1, ClickBtn2 } from "../../utils/buttons/submitBtn/CustomBtn";
 
-export default function FormToggle() {
+type FormToggleProps = {
+  startForm: FormType;
+  onSucess?: () => any;
+};
 
-const [enableBtn, setEnableBtn] = useState(false);
-   const { currentForm, nextForm, toggle} = useToggle();
-   const { textData } = useLanguage();
+export default function FormToggle({ startForm, onSucess }: FormToggleProps) {
+  const [enableBtn, setEnableBtn] = useState(false);
+  const { currentForm, nextForm, toggle } = useToggle(startForm);
+  const { textData } = useLanguage();
 
-   const onToggle = () => {
+  const onToggle = () => {
     setEnableBtn(false);
     toggle();
-   }
+  };
 
-   const getFormBtnText = (form: FormType) :string => {
+  const getFormBtnText = (form: FormType): string => {
     switch (form) {
-        case FormType.Login:
-            return textData.loginForm.form.submitBtnText;
-        case FormType.Registration:
-            return textData.registrationForm.form.submitBtnText;
+      case FormType.Login:
+        return textData.loginForm.form.submitBtnText;
+      case FormType.Registration:
+        return textData.registrationForm.form.submitBtnText;
     }
-   }
+  };
 
-    const FormLink =
-        (<div className="form-link" >
-            <button disabled={!enableBtn} type="submit" className="submit-btn">
-                {capitalizeFirstLetter(getFormBtnText(currentForm).toLowerCase())}
-            </button>
-            <a onClick={onToggle}>{getFormBtnText(nextForm).toUpperCase()}</a>
+  const handleResult = (sucess: boolean) => sucess && onSucess?.();
 
-        </div >);
+  const FormLink = (
+    <div className="form-link">
+      <ClickBtn1 disabled={!enableBtn} type="submit" text={getFormBtnText(currentForm)} />
+      <ClickBtn2 onClick={onToggle} text={getFormBtnText(nextForm)} />
+    </div>
+  );
 
-    switch (currentForm) {
-        case FormType.Login:
-            return <LoginForm submitButton={FormLink} onChange={setEnableBtn} />
-        case FormType.Registration:
-            return <RegistrationForm submitButton={FormLink} onChange={setEnableBtn} />
-        default:
-            return FormLink;
-    }
-
+  switch (currentForm) {
+    case FormType.Login:
+      return (
+        <LoginForm
+          submitButton={FormLink}
+          onChange={setEnableBtn}
+          handleResult={handleResult}
+        />
+      );
+    case FormType.Registration:
+      return (
+        <RegistrationForm
+          submitButton={FormLink}
+          onChange={setEnableBtn}
+          handleResult={handleResult}
+        />
+      );
+    default:
+      return FormLink;
+  }
 }

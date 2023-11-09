@@ -1,24 +1,17 @@
-import { useState } from "react";
 import "./ToggleButton.css";
 
 type ToggleButtonProps = {
-    toggle:(active: boolean) => any;
+    onToggle:() => any;
+    isActive: boolean
   }
 
-export default function ToggleButton({toggle} : ToggleButtonProps) {
-
-    const [active,setActive] = useState(false);
-
-    function toggleBtn() {
-        toggle(!active);
-        setActive(!active); 
-    }
+export default function ToggleButton({onToggle, isActive} : ToggleButtonProps) {
 
     return (
         <div>
             <div className="toggle-bg">
                 <div className="inner">
-                    <div className={"selector "  + (active ? "active" : "")} onClick={toggleBtn}>
+                    <div className={"selector "  + (isActive ? "active" : "")} onClick={onToggle}>
                     </div>
                 </div>
             </div>

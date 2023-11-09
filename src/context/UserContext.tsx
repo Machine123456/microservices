@@ -8,7 +8,7 @@ export enum UserRole {
   Admin = "Admin User"
 }
 
-type User = {
+export type User = {
   role: UserRole;
   name: string;
   email: string;

@@ -1,6 +1,6 @@
 import { useRef } from "react";
-import Slider, { SliderRef } from "../../../utils/slider/Slider";
 import "./Panel3.css";
+import Slider, { SliderRef } from "../../../../utils/slider/Slider";
 
 export default function Panel3() {
 

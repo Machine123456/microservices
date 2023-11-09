@@ -1,4 +1,5 @@
-import LanguageSelector from "../../../utils/enumSelector/languageSelector/LanguageSelector";
+
+import LanguageSelector from "../../../../utils/enumSelector/languageSelector/LanguageSelector";
 import "./Panel2.css";
 
 export default function Panel2() {

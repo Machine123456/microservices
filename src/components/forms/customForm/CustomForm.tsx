@@ -1,4 +1,4 @@
-import { ReactElement } from "react";
+import { ReactElement, useEffect, useRef } from "react";
 import "./CustomForm.css";
 import LoadingCircle from "../../utils/loadingCircle/LoadingCircle";
 import Feedback from "../../utils/feedback/Feedback";
@@ -19,10 +19,10 @@ export default function CustomForm({ title, formInputs,submitButton, formStatus 
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+
         const formData = new FormData(event.currentTarget);
         formStatus.submit(formData);
     }
-   
 
     return (
         <form className="form-body"

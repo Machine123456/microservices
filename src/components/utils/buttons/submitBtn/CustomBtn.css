@@ -1,0 +1,90 @@
+.click-btn1 {
+  all: unset;
+  text-align: center;
+  font-weight: normal;
+  transition: font-weight 0.2s;
+
+  &:not(:disabled) {
+    color: #e74c3c;
+    cursor: pointer;
+
+    &:hover {
+      font-weight: bold;
+    }
+
+    &:focus {
+      outline: revert;
+    }
+  }
+}
+
+.click-btn2 {
+  all: unset;
+  text-decoration: none;
+
+  cursor: pointer;
+  color: #333;
+  font-size: 8px;
+  margin: 0px;
+
+  text-underline-offset: .1rem;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.click-btn3 {
+  all: unset;
+
+  padding: .5em;
+  background-color: var(--details-color2);
+  border-radius: 5px;
+
+  border: 1px solid transparent;
+  font-size: 10px;
+  font-weight: bold;
+
+  transition: transform .1s;
+
+  &:hover{
+      background-color: var(--main-color2);
+      color: var(--details-color2);
+      border-color: var(--details-color2);
+
+      transform: scale(1.1);
+  }
+}
+
+.close-btn1 {
+
+  width: 1.5em;
+  aspect-ratio: 1;
+
+  border: 1px solid black;
+  border-radius: 50%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+
+  background-color: lightcyan;
+  transition: transform 0.1s;
+  
+
+  &::after{
+      content: "X";
+      color: black;
+
+      font-size: 13px;
+  }
+
+  &:hover {
+      font-weight: bold;
+      border-color: transparent;
+      transform: scale(1.2);
+
+  }
+
+}

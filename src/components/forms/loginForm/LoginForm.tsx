@@ -12,12 +12,13 @@ type LoginValidations = {
 type LoginFormProps = {
   submitButton: ReactElement
   onChange?: (isValid: boolean) => any
+  handleResult?: (sucess:boolean) => any
 }
 
-const LoginForm = ({ submitButton, onChange }: LoginFormProps) => {
+const LoginForm = ({ submitButton, onChange, handleResult }: LoginFormProps) => {
 
   const {textData} = useLanguage()
-  const { feedback, isLoading, login } = useLogin();
+  const { feedback, isLoading, login } = useLogin((sucess) => handleResult?.(sucess));
   const [formValidations, setFormValidations] = useState<LoginValidations>({ hasUsername: false, hasPassword: false });
 
   const handleInput = (newVal: LoginValidations) => {
@@ -54,7 +55,11 @@ const LoginForm = ({ submitButton, onChange }: LoginFormProps) => {
       title={textData.loginForm.form.title}
       formInputs={formInputs} 
       submitButton={submitButton} 
-      formStatus={{ feedback, isLoading, submit:handleLogin }}/>
+      formStatus={{ 
+        feedback, 
+        isLoading, 
+        submit:handleLogin
+      }}/>
 
   );
 };

@@ -5,14 +5,17 @@ import { useLanguage } from "../../../../hooks/useCustomContext";
 
 export default function LanguageSelector() {
 
-    const {language, setLanguage} = useLanguage();
+    const {language, setLanguage, languageToName} = useLanguage();
 
     return (
         <GenericEnumBasedSelect
             _enum={Language}
             changeHandler={(newOption: string) => setLanguage(newOption as Language)}
             selectedValue={language}
+            toValueString={languageToName}
         />
     );
+
+    
 
 }

@@ -1,4 +1,9 @@
 export type TextData = {
+    language: {
+        Portuguese: string
+        English: string
+    },
+
     loginForm: {
         form: {
             title: string,
@@ -34,6 +39,10 @@ export type TextData = {
 }
 
 export const englishTextData: TextData = {
+    language: {
+        Portuguese: "Protuguese",
+        English: "English",
+    },
     loginForm: {
         form: {
             title: "Login",
@@ -67,6 +76,10 @@ export const englishTextData: TextData = {
 }
 
 export const portugueseTextData: TextData = {
+    language: {
+        Portuguese: "Português",
+        English: "Inglês",
+    },
     loginForm: {
         form: {
             title: "Iniciar Sessão",

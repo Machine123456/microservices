@@ -1,11 +1,15 @@
 .selector {
 
     --selected-color:thistle;
+    --bg-color: white;
+    --text-color: black;
+    --sel-text-color: white;
 
     position: relative;
     width: 100%;
 
-    background-color: white;
+    color: var(--text-color);
+    background-color: var(--bg-color);
     border: 2px solid black;
     border-radius: 5px;    
 
@@ -38,11 +42,13 @@
         &:hover {
            
             background-color: var(--selected-color);
+            color: var(--sel-text-color);
         }
 
         &.active{
 
             background-color: var(--selected-color);
+            color: var(--sel-text-color);
 
             &::after{
                 content: "X";
@@ -69,10 +75,15 @@
             padding: .3em;
             border-radius: 5px;
 
+            & p {
+                text-align: right;
+            }
+
 
             &:hover {
 
                 background-color: var(--selected-color);
+                color: var(--sel-text-color);
                 & p {
                     font-weight: bold;
                 }
@@ -81,6 +92,7 @@
             &.selected {
 
                 background-color: var(--selected-color);
+                color: var(--sel-text-color);
             }
         }
     }

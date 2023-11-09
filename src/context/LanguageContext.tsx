@@ -12,7 +12,13 @@ export enum Language {
     English6 = "EN6",*/
 }
 
-
+const stringToLanguage = (languageString:string):Language | undefined => {
+    switch (languageString) {
+        case "PT": return Language.Portuguese;
+        case "EN": return Language.English;
+        default: return undefined
+    }
+}
 
 const appTextData: { [key in Language]: TextData } = {
     [Language.English]: englishTextData,
@@ -32,6 +38,7 @@ type LanguageContextValues = {
     language: Language
     setLanguage: (language: Language) => any
     textData: TextData 
+    languageToName: (language: string) => string
 }
 
 type LanguageProviderProps = {
@@ -39,11 +46,31 @@ type LanguageProviderProps = {
     // add any custom props, but don't have to specify `children`
 }
 
+const getLanguageToName = (textData: TextData) : (language: string) => string => 
+    (languageString: string) => {
+        
+        let language = stringToLanguage(languageString);
+
+        if(language){
+            switch (language) {
+                case Language.English: return textData.language.English;
+                case Language.Portuguese: return textData.language.Portuguese;
+            }
+        }
+        
+        return languageString;
+    }
+
+
+
+
+const defaultLanguage:Language = Language.English; 
 
 const defaultContext: LanguageContextValues = {
-    language: Language.Portuguese,
+    language: defaultLanguage,
     setLanguage: (_) => { },
-    textData: appTextData[Language.Portuguese]
+    textData: appTextData[defaultLanguage],
+    languageToName: getLanguageToName(appTextData[defaultLanguage])
 };
 
 export const LanguageContext = createContext<LanguageContextValues>(defaultContext);
@@ -52,10 +79,13 @@ export const LanguageProvider = ({ children }: LanguageProviderProps) => {
 
     var [language, setLanguage] = useState<Language>(defaultContext.language);
 
+    const textData =  appTextData[language];
+
     const contextValues: LanguageContextValues = {
         language,
         setLanguage,
-        textData: appTextData[language]
+        textData,
+        languageToName: getLanguageToName(textData)
     };
 
     return (

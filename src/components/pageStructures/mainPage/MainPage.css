@@ -1,37 +1,4 @@
-:root {
-   /*App use effect will create and override those*/
-
-  --main-color: ;
-  --main-color2: ; 
- 
-  --details-color: ;
-  --details-color2: ;
-
-  --page-width: calc(max(min(1200px,87vw),56vw));
-  --borders-size: 2px;
-  --borders-radius: 15px;
-}
-
-body{
-  font-family: Arial, sans-serif;
-  margin: 0;
-  text-align: center;
-  user-select: none;
-}
-
-#root {
-
-  background-color: var(--main-color);
-
-  min-width: 100vw;
-  min-height: 100vh;
-
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  justify-content: start;
-
-  .page {
+.main-page {
 
     width: var(--page-width);
     box-sizing: border-box;
@@ -58,12 +25,10 @@ body{
       border-radius: var(--borders-radius);
     }
   }
-}
 
 @media (max-width: 1024px) {
-  #root {
 
-    .page {
+    .main-page {
 
       flex-direction: column;
 
@@ -76,4 +41,3 @@ body{
       }
     }
   }
-}

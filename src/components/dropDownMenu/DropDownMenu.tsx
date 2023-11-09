@@ -1,31 +1,31 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import "./DropDownMenu.css";
 
 type DropDownMenuProps = {
-  children: React.ReactNode;
-  imgSrc?: string;
-  startActive?: boolean;
-  imgAlt?: string
-  // add any custom props, but don't have to specify `children`
-}
+  children: React.ReactNode,
+  imgSrc?: string,
+  imgAlt?: string,
+  onToggle: (active:boolean) => any,
+  active: boolean
+};
 
-export default function DropDownMenu({
+
+const DropDownMenu = ({
   children,
   imgSrc = "/user.png",
-  startActive = false,
-  imgAlt = ""
-}: DropDownMenuProps) {
-  const [isActive, setIsActive] = useState(startActive);
-  const ddRef = useRef<HTMLDivElement | null>(null);
+  active,
+  onToggle,
+  imgAlt = "",
+}: DropDownMenuProps) => {
+  const ddRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleClick = (event: Event) => {
       if (!(event.target instanceof HTMLElement) || !ddRef.current) return;
 
-      if (!ddRef.current.contains(event.target)) setDropdown(false);
+      if (!ddRef.current.contains(event.target)) onToggle(false);
     };
 
-    setDropdown(isActive);
     document.addEventListener("mousedown", handleClick);
 
     return () => {
@@ -33,26 +33,18 @@ export default function DropDownMenu({
     };
   }, []);
 
-  function toggleDropdown() {
-    setDropdown(!isActive);
-  }
+  const handleImgClick = () => {
+   /* console.log("Img Clicked");*/
 
-  function setDropdown(active: boolean) {
-    let dropDown = ddRef.current;
-
-    if (!dropDown) return;
-
-    active
-      ? dropDown.classList.add("active")
-      : dropDown.classList.remove("active");
-
-    setIsActive(active);
+    onToggle(!active);
   }
 
   return (
-    <div className="dropdown" ref={ddRef}>
-      <img src={imgSrc} alt={imgAlt} onClick={toggleDropdown} />
+    <div className={"dropdown " + (active ? " active" : "") } ref={ddRef}>
+      <img src={imgSrc} alt={imgAlt} onClick={ handleImgClick} />
       <div className="dropdown-content">{children}</div>
     </div>
   );
-}
+};
+
+export default DropDownMenu;

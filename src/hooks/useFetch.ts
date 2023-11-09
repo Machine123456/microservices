@@ -24,7 +24,7 @@ export function useFetch({onError, onData, name}: handleFetchProps){
         abortControllerRef.current?.abort();
         abortControllerRef.current = new AbortController();
 
-        console.log("start fetch: " + name);
+/*        console.log("start fetch: " + name);*/
         
         setIsLoading(true);
 

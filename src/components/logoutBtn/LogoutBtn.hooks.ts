@@ -1,7 +1,9 @@
+
 import { useUser } from "../../hooks/useCustomContext";
 import { useFetch } from "../../hooks/useFetch";
 
-export function useLogout() {
+
+export function useLogout(onLogout: () => any) {
     const { updateToken } = useUser();
     const { doFetch, isLoading } = useFetch({
         name: "logout",
@@ -9,8 +11,10 @@ export function useLogout() {
             console.error('Error during logout:', error);
         },
         onData: (data) => {
-            if (data.status === 200)
+            if (data.status === 200){
                 updateToken(null);
+                onLogout();
+            }
         }
     });
 

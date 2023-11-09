@@ -1,0 +1,33 @@
+.user-menu{
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+
+    gap: 1em;
+
+    .dropdown-content {
+        translate: -85%;
+    }
+
+    .menu-btn {
+        padding: .5em;
+        background-color: var(--details-color2);
+        border-radius: 5px;
+
+        border: 1px solid transparent;
+        font-size: 10px;
+        font-weight: bold;
+
+        transition: transform .1s;
+
+        &:hover{
+            background-color: var(--main-color2);
+            color: var(--details-color2);
+            border-color: var(--details-color2);
+
+            transform: scale(1.1);
+        }
+    }
+
+
+}

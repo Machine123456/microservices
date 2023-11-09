@@ -1,8 +1,9 @@
 import { UserRole } from "../../../context/UserContext";
 import { useUser } from "../../../hooks/useCustomContext";
 import DropDownMenu from "../DropDownMenu";
-import { MappingResponse } from "../../pageStructures/serviceHeader/servicesList/ServicesList.hooks";
+import { MappingResponse } from "../../pageStructures/serviceHeader/servicesMenu/ServicesMenu.hooks";
 import "./ServiceDropDown.css";
+import { useState } from "react";
 
 type ServiceDropDownProps = {
   serviceName: string;
@@ -13,6 +14,8 @@ export default function ServiceDropDown({
   serviceName,
   serviceMapping,
 }: ServiceDropDownProps) {
+
+  const [active,setActive] = useState(false);
   let { user } = useUser();
 
   function getHeadOfPath(path: string) {
@@ -30,12 +33,14 @@ export default function ServiceDropDown({
         return true;
     }
   }
+  
 
   return (
 
     <DropDownMenu
       imgSrc={serviceMapping ? serviceMapping.imageData : undefined}
       imgAlt={serviceName}
+      active={active} onToggle={setActive}
     >
       {serviceMapping &&
         serviceMapping.endpoints.map((endpoint) => {
