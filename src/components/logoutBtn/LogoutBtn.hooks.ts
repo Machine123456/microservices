@@ -6,7 +6,7 @@ import { useFetch } from "../../hooks/useFetch";
 export function useLogout(onLogout: () => any) {
     const { updateToken } = useUser();
     const { doFetch, isLoading } = useFetch({
-        name: "logout",
+        service: "Authentication",
         onError: (error) => {
             console.error('Error during logout:', error);
         },
@@ -18,7 +18,7 @@ export function useLogout(onLogout: () => any) {
         }
     });
 
-    const logout = () => doFetch({ url: import.meta.env.VITE_AUTH_SERVER + '/auth/logout' });
+    const logout = () => doFetch({ endpoint: 'logout' });
 
     return { logout, isLoading };
 

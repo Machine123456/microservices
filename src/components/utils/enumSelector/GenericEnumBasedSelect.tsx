@@ -1,6 +1,6 @@
 import { FC, useState } from 'react';
 import './GenericEnumBasedSelect.css';
-import { getEnumKeyFromEnumValue, getEnumKeyValues } from '../../../utils/EnumUtils';
+import { getEnumKeyFromEnumValue, getEnumKeyValues } from '../../../utils/enumUtils';
 
 interface GenericEnumBasedSelectProps {
     _enum: object;

@@ -16,7 +16,7 @@ export function useRegistration(handleResult: (sucess:boolean) => any) {
     }
     const {textData} = useLanguage()
     const { doFetch, isLoading } = useFetch({
-        name: "register",
+        service: "Authentication",
         onError: (error) => {
             console.error('Error during registration:', error);
             setFeedbackStatus(true,textData.registrationForm.feedback.onServerFail);
@@ -43,7 +43,7 @@ export function useRegistration(handleResult: (sucess:boolean) => any) {
         };
 
         doFetch({
-            url: import.meta.env.VITE_AUTH_SERVER + '/auth/register',
+            endpoint:'register',
             fetchParams: {
                 method: "POST",
                 body: JSON.stringify(postBody)

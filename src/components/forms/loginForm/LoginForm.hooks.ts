@@ -7,7 +7,7 @@ export function useLogin(handleResult: (sucess:boolean) => any) {
   const {textData} = useLanguage()
   
   const { doFetch, isLoading } = useFetch({
-    name: "login",
+    service: "Authentication",
     onError: (error) => {
       setFeedBackStatus(true,textData.loginForm.feedback.onServerFail);
       //setFeedback("Error during login, check logs for more info");
@@ -40,7 +40,7 @@ export function useLogin(handleResult: (sucess:boolean) => any) {
     //const csrfToken = document.querySelector('input[name="_csrf"]').value;
     
     doFetch({
-      url: import.meta.env.VITE_AUTH_SERVER + "/auth/login",
+      endpoint: "login",
       fetchParams: {
         method: "POST",
         body: JSON.stringify({

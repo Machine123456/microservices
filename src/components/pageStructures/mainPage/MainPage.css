@@ -1,12 +1,7 @@
 .main-page {
-
-    width: var(--page-width);
-    box-sizing: border-box;
-
-    margin-block: 1vh;
     
     display: flex;
-    align-items: center;
+    align-items: stretch;
     justify-content: space-evenly;
     gap: 1em;
 
@@ -20,6 +15,7 @@
 
     .right-body {
       width: 20%;
+
       background-color: orange;
       border: var(--borders-size) solid var(--details-color);
       border-radius: var(--borders-radius);
@@ -29,15 +25,14 @@
 @media (max-width: 1024px) {
 
     .main-page {
-
       flex-direction: column;
 
       .left-body {
-        width: 100%;
+        min-width: 100%;
       }
 
       .right-body {
-         width: 100%;
+        min-width: 100%;
       }
     }
   }

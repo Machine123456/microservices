@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import "./popupMenu.css";
-import { CloseBtn1 } from "../buttons/submitBtn/CustomBtn";
+import { CloseBtn1 } from "../buttons/customBtn/CustomBtn";
 
 type PopupMenuProps = {
   children?: React.ReactNode;
@@ -28,7 +28,7 @@ export default function popupMenu({ children, onExitClick }: PopupMenuProps) {
     <div className="popup-menu">
       <div className="menu" ref={menuRef}>
           <div className="corner-pos"> <CloseBtn1 onClick={() => onExitClick?.()} /></div>
-          <div className="content">{children}</div>
+          <div className="menu-content">{children}</div>
       </div>
     </div>
   );

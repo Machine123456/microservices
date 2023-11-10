@@ -1,4 +1,4 @@
-import { ClickBtn1 } from "../utils/buttons/submitBtn/CustomBtn";
+import { ClickBtn1 } from "../utils/buttons/customBtn/CustomBtn";
 import LoadingCircle from "../utils/loadingCircle/LoadingCircle";
 import "./LogoutBtn.css";
 import { useLogout } from "./LogoutBtn.hooks";

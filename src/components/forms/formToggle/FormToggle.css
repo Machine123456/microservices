@@ -5,38 +5,4 @@
   width: 100%;
 
   margin-top: .3em;
-
-  & a {
-    text-decoration: none;
-
-    cursor: pointer;
-    color: #333;
-    font-size: 8px;
-    margin: 0px;
-
-    &:hover {
-      text-decoration: underline;
-    }
-  }
-
-  .submit-btn {
-    all: unset;
-    text-align: center;
-    font-weight: normal;
-    transition: font-weight 0.2s;
-
-    &:not(:disabled) {
-
-      color: #e74c3c;
-      cursor: pointer;
-
-      &:hover {
-        font-weight: bold;
-      }
-
-      &:focus {
-        outline: revert;
-      }
-    }
-  }
 }

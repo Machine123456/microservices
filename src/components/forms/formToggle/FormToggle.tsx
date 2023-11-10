@@ -4,7 +4,7 @@ import LoginForm from "../loginForm/LoginForm";
 import { FormType, useToggle } from "./FormToggle.hooks";
 import { useState } from "react";
 import { useLanguage } from "../../../hooks/useCustomContext";
-import { ClickBtn1, ClickBtn2 } from "../../utils/buttons/submitBtn/CustomBtn";
+import { ClickBtn1, ClickBtn2 } from "../../utils/buttons/customBtn/CustomBtn";
 
 type FormToggleProps = {
   startForm: FormType;

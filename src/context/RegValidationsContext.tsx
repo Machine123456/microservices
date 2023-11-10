@@ -34,7 +34,7 @@ export const RegValidationsProvider = ({ children }: RegValidationProviderProps)
     const [hasError, setHasError] = useState<boolean>(defaultContext.hasError);
 
     const { doFetch, isLoading } = useFetch({
-        name: "validations",
+        service: "Authentication",
         onError: (error) => {
             console.error("Error fetching inputs validations: ", error);
             setFieldsValidations(defaultContext.fieldsValidations);
@@ -74,7 +74,7 @@ export const RegValidationsProvider = ({ children }: RegValidationProviderProps)
 
     useEffect(() => {
         doFetch({
-            url: import.meta.env.VITE_AUTH_SERVER + '/auth/getUserRequirements',
+            endpoint: 'getUserRequirements',
             fetchParams: {
                 method: "GET",
                 headers: {

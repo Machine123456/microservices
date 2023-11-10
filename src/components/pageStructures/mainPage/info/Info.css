@@ -1,4 +1,4 @@
-.content {
+.info-content {
     padding: .3em;
 
     display: flex;
@@ -85,7 +85,7 @@
 
 
 @media (max-width: 1024px) {
-    .content {
+    .info-content {
         flex-wrap: wrap;
 
         flex-direction: row;

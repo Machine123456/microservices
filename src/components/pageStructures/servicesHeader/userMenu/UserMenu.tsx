@@ -7,7 +7,7 @@ import PopupMenu from "../../../utils/popupMenu/PopupMenu";
 import FormToggle from "../../../forms/formToggle/FormToggle";
 import { FormType } from "../../../forms/formToggle/FormToggle.hooks";
 import { UserRole } from "../../../../context/UserContext";
-import { ClickBtn3 } from "../../../utils/buttons/submitBtn/CustomBtn";
+import { ClickBtn3 } from "../../../utils/buttons/customBtn/CustomBtn";
 
 export default function UserMenu() {
   const { isLoading, user } = useUser();

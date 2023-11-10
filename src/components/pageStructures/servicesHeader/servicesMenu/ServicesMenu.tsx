@@ -1,18 +1,15 @@
 import "./ServicesMenu.css";
 import ServiceDropDown from "../../../dropDownMenu/serviceDropDown/ServiceDropDown";
-import { MappingResponse, useMapps } from "./ServicesMenu.hooks";
-import LoadingCircle from "../../../utils/loadingCircle/LoadingCircle";
+import { ServicesList } from "../../../../utils/servicesData";
 
 export default function ServiceMenu() {
-
-  const { servicesMap, isLoading } = useMapps();
   return (
     <div className="services-list">
       {
-        isLoading ? <LoadingCircle /> :
-          servicesMap && Object.entries(servicesMap).map(([serviceName, serviceMapping]) => {
+      
+      ServicesList.map((service,index) => {
             //return <div key={serviceName}> {serviceName} </div> 
-            return <ServiceDropDown key={serviceName} serviceName={serviceName} serviceMapping={(serviceMapping as MappingResponse)} />;
+            return <ServiceDropDown key={index}  service={service} />;
           })
 
       }

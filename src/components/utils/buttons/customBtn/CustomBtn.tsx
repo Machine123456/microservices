@@ -1,6 +1,6 @@
 import { ButtonHTMLAttributes } from "react";
-import { capitalizeFirstLetter } from "../../../../utils/Funcs";
 import "./CustomBtn.css";
+import { capitalizeFirstLetter } from "../../../../utils/funcs";
 
 type ClickBtnProps = ButtonHTMLAttributes<HTMLButtonElement> & {
     text?: string
@@ -14,7 +14,7 @@ export const ClickBtn1 = (props: ClickBtnProps) => {
 
     const {text, ...btnProps} = props;
     return (
-        <button {...btnProps} className="submit-btn1" >
+        <button {...btnProps} className="click-btn1" >
             {capitalizeFirstLetter(text?.toLowerCase())}
         </button>
     );

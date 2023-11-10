@@ -15,7 +15,7 @@
     transition: transform 0.2s;
 
     &:hover {
-      border: 2px solid #f0f0f0;
+      border: 2px solid #808080;
       transform: scale(1.1);
     }
 
@@ -48,7 +48,7 @@
     }
     
     & img {
-        border: 2px solid  #808080;
+        border: 2px solid #f0f0f0; 
         transform: scale(1.1);
       }
   }

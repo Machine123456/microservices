@@ -5,6 +5,7 @@ import { ThemeProvider } from "./context/ThemeContext";
 import { UserProvider } from "./context/UserContext";
 import { LanguageProvider } from "./context/LanguageContext";
 import MainPage from "./components/pageStructures/mainPage/MainPage";
+import ServicePage from "./components/pageStructures/servicePage/ServicePage";
 
 export default function App() {
   return (
@@ -20,10 +21,17 @@ export default function App() {
 
 function Inner() {
 
+  console.log("Rerender");
+  
+
   return (
     <>
+
       <ServicesHeader />
-      <MainPage/>
+      <ServicePage />
+      <div className="page-body">
+        <MainPage/>
+      </div>
     </>
 
   );

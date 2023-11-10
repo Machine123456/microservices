@@ -2,7 +2,7 @@ import "./Info.css";
 
 export default function Info() {
     return (
-        <div className="content">
+        <div className="info-content">
          <div className="frame">
           <img src="/portrait_background.png" className="portrait-background" />
           <img src="/portrait.png" className="portrait-blur" />

@@ -1,16 +1,19 @@
 import { useRef, useState } from "react";
+import { Service, getServiceUrl } from "../utils/servicesData";
 
 type handleFetchProps = {
     onError?: (error: string) => any,
     onData?: (data: Response) => any,
 
-    name: string //for debug
+    service: Service
+    //name: string //for debug
 }
 
-export function useFetch({onError, onData, name}: handleFetchProps){
+
+export function useFetch({service, onError, onData}: handleFetchProps){
 
     type FetchProps = {
-        url: string
+        endpoint: string
         fetchParams?: RequestInit
     }
 
@@ -19,7 +22,7 @@ export function useFetch({onError, onData, name}: handleFetchProps){
     const abortControllerRef = useRef<AbortController | null>(null);
     const abortedStack = useRef(0);
 
-    const doFetch = async ({url,fetchParams}:FetchProps) => {
+    const doFetch = async ({endpoint,fetchParams}:FetchProps) => {
         
         abortControllerRef.current?.abort();
         abortControllerRef.current = new AbortController();
@@ -30,7 +33,7 @@ export function useFetch({onError, onData, name}: handleFetchProps){
 
         //await delay(1000); //overwrites abort signal if used here
 
-        await fetch(url,{
+        await fetch(getServiceUrl(service) + endpoint,{
             ...fetchParams,
             signal: abortControllerRef.current.signal,
         })

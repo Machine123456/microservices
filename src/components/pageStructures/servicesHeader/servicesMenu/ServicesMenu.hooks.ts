@@ -15,7 +15,7 @@ export type MappingResponse = {
 export function useMapps() {
   const [servicesMap, setServicesMaps] = useState<Record<string, MappingResponse>>();
   const { doFetch, isLoading } = useFetch({
-    name: "mapps",
+    service: "Authentication",
     onError: (error) => {
       console.error("Error fetching mapps: ", error);
     },
@@ -38,7 +38,7 @@ export function useMapps() {
 });
 
   useEffect(() => {
-    doFetch({ url: import.meta.env.VITE_AUTH_SERVER + "/auth/getServicesMapping" });
+    doFetch({ endpoint: "getServicesMapping" });
   }, []);
 
   return { servicesMap, isLoading };

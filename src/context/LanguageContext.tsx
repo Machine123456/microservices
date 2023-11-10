@@ -1,5 +1,5 @@
 import { createContext, useState } from "react";
-import { TextData, englishTextData, portugueseTextData } from "./LanguageTextData";
+import { TextData, englishTextData, portugueseTextData } from  "../utils/languageTextData";;
 
 export enum Language {
     Portuguese = "PT",

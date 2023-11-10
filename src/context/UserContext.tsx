@@ -1,6 +1,7 @@
 import { createContext, useEffect, useState } from "react";
-import { CookieOptions, addCookie, getCookie, removeCookie } from "../utils/Cookies";
+
 import { useFetch } from "../hooks/useFetch";
+import { CookieOptions, addCookie, getCookie, removeCookie } from "../utils/cookies";
 
 export enum UserRole {
   None = "Not a User",
@@ -44,7 +45,7 @@ export const UserProvider = ({ children }: UserProviderProps) => {
   const [user, setUser] = useState<User>(defaultContext.user);
 
   const { doFetch, isLoading } = useFetch({
-    name: "users",
+    service: "Authentication",
     onError: (error) => {
       console.error("Error fetching user from token: ", error);
       setUser(defaultContext.user);
@@ -76,7 +77,7 @@ export const UserProvider = ({ children }: UserProviderProps) => {
   useEffect(() => {
     if (accessToken && accessToken.length > 0)
       doFetch({
-        url: import.meta.env.VITE_AUTH_SERVER + "/auth/getUserFromToken",
+        endpoint: "getUserFromToken",
         fetchParams: {
           method: "GET",
           headers: {
