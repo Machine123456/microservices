@@ -1,37 +1,21 @@
 package com.cap.authenticationservice.service;
 
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.Base64;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.imageio.ImageIO;
-
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
-import com.cap.authenticationservice.dto.MappingResponse;
 import com.cap.authenticationservice.dto.UserRequest;
 import com.cap.authenticationservice.model.User;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
@@ -43,16 +27,8 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final TokenService tokenService;
 
-    private final RestTemplate restTemplate;
-
     @Value("${api.endpoint.services}")
     private String servicesJson;
-
-    @Value("${api.endpoint.server.bridge.host}")
-    private String bridgeHostname;
-
-    @Value("${api.endpoint.server.bridge.port}")
-    private String bridgePort;
 
     public String authenticateUser(UserRequest userRequest) throws AuthenticationException {
 
@@ -67,7 +43,20 @@ public class AuthenticationService {
         return token;
     }
 
+    private List<Map<String, Object>> getServices() {
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper.readValue(servicesJson, new TypeReference<List<Map<String, Object>>>() {});
+        } catch (IOException e) {
+            return null; 
+        }
+    }
+
   
+/* 
+
+    private final RestTemplate restTemplate;
 
     public Map<String, MappingResponse> getServicesMapping() throws Exception{
 
@@ -158,16 +147,8 @@ public class AuthenticationService {
         return res;
       
     }
+*/
 
-    private List<Map<String, Object>> getServices() {
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            return objectMapper.readValue(servicesJson, new TypeReference<List<Map<String, Object>>>() {});
-        } catch (IOException e) {
-            return null; 
-        }
-    }
     
    
 

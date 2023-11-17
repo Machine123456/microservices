@@ -4,16 +4,13 @@ import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.cap.authenticationservice.dto.MappingResponse;
 import com.cap.authenticationservice.dto.UserRequest;
 import com.cap.authenticationservice.dto.UserResponse;
 import com.cap.authenticationservice.service.AuthenticationService;
@@ -25,31 +22,31 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/auth/request")
 @RequiredArgsConstructor
 public class AuthenticationController{
 
-    private final AuthenticationService authService;
     private final UserService userService;
     private final TokenService tokenService;
+    private final AuthenticationService authService;
 
     @PostMapping("/register")
     @ResponseBody
     public ResponseEntity<String> registerUser(@RequestBody UserRequest userRequest, HttpServletResponse response){
 
         try {
-            userService.saveUser(userRequest);
+            userService.createUser(userRequest);
 
             String token = authService.authenticateUser(userRequest);
             response.addCookie(tokenService.generateTokenCookie(token));
 
             return ResponseEntity.ok(token);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to create user:\n" + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to create user: " + e.getMessage());
         }
     }
 
-    @CrossOrigin
+   
     @PostMapping("/login")
     @ResponseBody
     public ResponseEntity<String> loginUser(@RequestBody UserRequest userRequest, HttpServletResponse response) {
@@ -66,7 +63,6 @@ public class AuthenticationController{
         }
     }
 
-    @CrossOrigin
     @GetMapping("/logout")
     @ResponseBody
     public ResponseEntity<String> logoutUser(HttpServletRequest request, HttpServletResponse response) {
@@ -88,17 +84,7 @@ public class AuthenticationController{
         }
     }
 
-    @GetMapping("/recoverToken")
-    @ResponseBody
-    public ResponseEntity<String> recoverToken(HttpServletRequest request) {
-        try {
-            return ResponseEntity.ok(tokenService.recoverToken(request));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(null);
-        } 
-    }
 
-    @CrossOrigin
     @GetMapping("/getUserFromToken")
     @ResponseBody
     public ResponseEntity<UserResponse> getUserFromToken(HttpServletRequest request) {
@@ -109,14 +95,34 @@ public class AuthenticationController{
             if(!tokenResult.isPresent())
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(UserResponse.ofError(tokenResult.getErrorMsg()));
 
-            var user = userService.findUserByUsername(tokenResult.get());
+            var userId = tokenResult.get();
+            var user = userService.findUserById(userId);
             return ResponseEntity.ok(user);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(UserResponse.ofError(e.getMessage()));
         }
     }
 
-    @CrossOrigin
+    @GetMapping("/getUserRequirements")
+    @ResponseBody
+    public ResponseEntity<Map<String,Map<String,String>>> getUserRequirements() {
+        return ResponseEntity.ok(userService.getUserFieldsRequirements());
+    }
+
+
+    /*
+    
+    
+    @GetMapping("/recoverToken")
+    @ResponseBody
+    public ResponseEntity<String> recoverToken(HttpServletRequest request) {
+        try {
+            return ResponseEntity.ok(tokenService.recoverToken(request));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(null);
+        } 
+    }
+
     @GetMapping("/getServicesMapping")
     @ResponseBody
     public ResponseEntity<Map<String, MappingResponse>> getServicesMapping(HttpServletRequest request) {
@@ -150,19 +156,14 @@ public class AuthenticationController{
         } 
     }
     
-    @CrossOrigin
     @GetMapping("/getBridgeHostname")
     @ResponseBody
     public ResponseEntity<String> getBridgeHostname() {
         return ResponseEntity.ok(authService.getBridgeHostname());
     }
 
-    @CrossOrigin
-    @GetMapping("/getUserRequirements")
-    @ResponseBody
-    public ResponseEntity<Map<String,Map<String,String>>> getUserRequirements() {
-        return ResponseEntity.ok(userService.getUserFieldsRequirements());
-    }
+    */
+
 
     
 }

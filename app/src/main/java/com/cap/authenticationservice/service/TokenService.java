@@ -16,7 +16,7 @@ import com.auth0.jwt.exceptions.InvalidClaimException;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
-import com.cap.authenticationservice.Result;
+import com.cap.authenticationservice.data.Result;
 import com.cap.authenticationservice.model.User;
 
 import jakarta.servlet.http.Cookie;
@@ -35,7 +35,8 @@ public class TokenService {
             Algorithm algorithm = Algorithm.HMAC256(secret);
             String token = JWT.create()
                     .withIssuer("authentication-service")
-                    .withSubject(user.getUsername())
+                    //.withSubject(user.getUsername())
+                    .withSubject(String.valueOf(user.getId()))
                     .withExpiresAt(Instant.now().plusSeconds(1000))
                     .sign(algorithm);
             return token;
@@ -44,7 +45,7 @@ public class TokenService {
         }
     }
 
-    public Result<String> validateToken(String token) {
+    public Result<Long> validateToken(String token) {
 
         String errorMsg = "";
 
@@ -58,8 +59,9 @@ public class TokenService {
             Algorithm algorithm = Algorithm.HMAC256(secret);
             var jwt = JWT.require(algorithm).withIssuer("authentication-service").build();
             var verify = jwt.verify(token);
-            var username = verify.getSubject();
-            return Result.of(username);
+            //var username = verify.getSubject();
+            long id = Long.parseLong(verify.getSubject());
+            return Result.of(id);
         } catch (JWTVerificationException e) {
             // Log the specific exception for troubleshooting
             if (e instanceof TokenExpiredException) {

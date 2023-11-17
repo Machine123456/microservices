@@ -1,4 +1,4 @@
-package com.cap.authenticationservice;
+package com.cap.authenticationservice.data;
 
 public class Result<T> {
 

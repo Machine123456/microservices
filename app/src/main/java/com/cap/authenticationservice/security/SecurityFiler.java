@@ -61,7 +61,7 @@ public class SecurityFiler extends OncePerRequestFilter {
             return false;
         }
 
-        var opt = userRepository.findByUsername(tokenResult.get());
+        var opt = userRepository.findById(tokenResult.get());
 
         if(opt.isPresent()){
             UserDetails user = opt.get();
