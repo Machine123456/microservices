@@ -2,7 +2,6 @@ package com.cap.authenticationservice.model;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 
 import org.springframework.security.core.GrantedAuthority;
 

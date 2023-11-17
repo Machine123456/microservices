@@ -1,7 +1,5 @@
 package com.cap.authenticationservice.model;
 
-import java.util.UUID;
-
 import org.springframework.security.core.GrantedAuthority;
 
 import jakarta.persistence.Column;

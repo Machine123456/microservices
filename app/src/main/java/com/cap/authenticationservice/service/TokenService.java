@@ -21,8 +21,10 @@ import com.cap.authenticationservice.model.User;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class TokenService {
 
     @Value("${api.security.token.secret}")

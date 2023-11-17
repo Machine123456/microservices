@@ -7,7 +7,7 @@ api:
             port: ${SERVER_PORT:8091}
             front-end: ${FRONT_END_CORS_ALLOWED_ORIGIN:http://localhost:5173}
         database:
-            host: ${DATABASE_HOST:localhost} # mysql-db.chg7ujdhhts7.eu-west-3.rds.amazonaws.com
+            host: ${DATABASE_HOST:database-1.chg7ujdhhts7.eu-west-3.rds.amazonaws.com} # localhost
             port: ${DATABASE_PORT:3306}
             name: ${DATABASE_NAME:authentication_service}
             pass: ${DATABASE_PSD:rootroot} # should be replaced with an authentication service user
