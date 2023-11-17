@@ -49,7 +49,11 @@ export function useFetch({service, onError, onData}: handleFetchProps){
             },
             signal: abortControllerRef.current.signal,
         })
-        .then(onData)
+        .then(data => {
+            if(data.status === 200)
+                onData?.(data);
+            else onError?.("Error " + data.status + " : " + data.text);
+        })
         .catch((e:Error) => {
             if(e.name === "AbortError")
                 abortedStack.current ++;

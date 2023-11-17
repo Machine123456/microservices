@@ -20,7 +20,7 @@ export default function UserMenu() {
         <LoadingCircle />
       ) : (
         <>
-          {(!user || user.name === "") && (
+          {(!user || user.id === -1) && (
             <>
               <ClickBtn3
                 text={textData.loginForm.form.title}

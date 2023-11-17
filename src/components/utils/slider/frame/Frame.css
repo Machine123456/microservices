@@ -11,6 +11,7 @@
 
         background-color: lightblue;
         border: var(--borders-size) solid var(--details-color);
+        color: black;
         border-radius: var(--borders-radius);
 
         transform: scale(.9);

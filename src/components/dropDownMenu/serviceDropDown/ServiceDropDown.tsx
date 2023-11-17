@@ -16,7 +16,7 @@ export default function ServiceDropDown({ service }: ServiceDropDownProps) {
   let { user } = useUser();
 
   const serviceData = servicesData[service];
-  const enable:boolean = hasAuthorities(user,serviceData.requiredAuthorities);
+  const enable:boolean = hasAuthorities(user,...serviceData.requiredAuthorities);
 
   return (<>
     <DropDownMenu

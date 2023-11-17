@@ -1,22 +1,22 @@
 import React from "react";
-import { Authority, User, hasAuthorities } from "../../../context/UserContext";
+import { hasAuthorities } from "../../../context/UserContext";
 import "./ServicePage.css";
 import { Navigate, Outlet, RouteObject, createBrowserRouter, useNavigate } from "react-router-dom";
 import App from "../../../App";
 import MainPage from "../mainPage/MainPage";
-import UsersPage from "./authenticationServicePages/usersPage/UsersPage";
 import { CloseBtn1 } from "../../utils/buttons/customBtn/CustomBtn";
 import RequireAuthoritiesRoute from "./RequireRoleRoute";
+import { MappedAuthority, User } from "../../../utils/models";
+import FetchDataPage from "./fetchDataPage/FetchDataPage";
 
 export const ServicesList = ["Authentication", "Product"] as const;
 export type Service = (typeof ServicesList)[number];
 
 export type ServiceData = {
-
   name: string
   element: JSX.Element
   serviceImgPath?: string
-  requiredAuthorities: Authority[]
+  requiredAuthorities: MappedAuthority[]
 
   views?: ServiceData[];
 };
@@ -44,18 +44,30 @@ export const servicesData: { [service in Service]: ServiceData } = {
     name: "authentication",
     element: <Outlet />,
     serviceImgPath: "/authicon.png",
-    requiredAuthorities: [Authority.ROLE_USER],
+    requiredAuthorities: [],
     views: [
       {
         ...defaultServiceData,
         name: "users",
-        requiredAuthorities: [Authority.READ_USER],
-        element: <UsersPage />
+        requiredAuthorities: [],
+        element: <FetchDataPage dataType="user" />
+      },
+      {
+        ...defaultServiceData,
+        name: "roles",
+        requiredAuthorities: [],
+        element: <FetchDataPage dataType="role" />
+      },
+      {
+        ...defaultServiceData,
+        name: "authorities",
+        requiredAuthorities: [],
+        element: <FetchDataPage dataType="authority" />
       },
       {
         ...defaultServiceData,
         name: "admin",
-        requiredAuthorities: [Authority.ROLE_ADMIN],
+        requiredAuthorities: [],
         element: <div>admin</div>
       },
     ]
@@ -65,18 +77,18 @@ export const servicesData: { [service in Service]: ServiceData } = {
     name: "product",
     element: <Outlet />,
     serviceImgPath: "/producticon.png",
-    requiredAuthorities: [Authority.ROLE_USER],
+    requiredAuthorities: [MappedAuthority.ROLE_USER],
     views: [
       {
         ...defaultServiceData,
         name: "products",
-        requiredAuthorities: [Authority.ROLE_USER],
+        requiredAuthorities: [MappedAuthority.ROLE_USER],
         element: <div>products</div>
       },
       {
         ...defaultServiceData,
         name: "admin",
-        requiredAuthorities: [Authority.ROLE_ADMIN],
+        requiredAuthorities: [MappedAuthority.ROLE_ADMIN],
         element: <div>admin</div>
       },],
   },
@@ -94,7 +106,7 @@ export const getUserServiceLinks = (user: User,service: Service): string[] => {
 
       let links: string[] = [];
       data.views.forEach((viewData: ServiceData) => {
-        if (hasAuthorities(user, viewData.requiredAuthorities))
+        if (hasAuthorities(user, ...viewData.requiredAuthorities))
           links = [...links, ...aux(viewData, newPath)]
       })
       return links;

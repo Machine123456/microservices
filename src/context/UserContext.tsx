@@ -2,39 +2,8 @@ import { createContext, useEffect, useState } from "react";
 
 import { useFetch } from "../hooks/useFetch";
 import { getCookie, updateCookie } from "../utils/cookies";
+import {MappedAuthority, User, UserData } from "../utils/models";
 
-/*
-export enum UserRole {
-  None = "Not a User",
-  User = "User",
-  Admin = "Admin User"
-}*/
-
-export enum Authority {
-  ROLE_USER = "ROLE_USER",
-  ROLE_ADMIN = "ROLE_ADMIN",
-
-  CREATE_USER = "CREATE_USER",
-  READ_USER = "READ_USER",
-  UPDATE_USER = "UPDATE_USER",
-  DELETE_USER = "DELETE_USER",
-
-  CREATE_ROLE = "CREATE_ROLE",
-  READ_ROLE = "READ_ROLE",
-  UPDATE_ROLE = "UPDATE_ROLE",
-  DELETE_ROLE = "DELETE_ROLE",
-
-  CREATE_Authority = "CREATE_AUTHORITY",
-  READ_AUTHORITY = "READ_AUTHORITY",
-  UPDATE_AUTHORITY = "UPDATE_AUTHORITY",
-  DELETE_AUTHORITY = "DELETE_AUTHORITY"
-}
-
-export type User = {
-  authorities: Authority[];
-  name: string;
-  email: string;
-}
 
 type UserContextValues = {
   user: User
@@ -49,8 +18,9 @@ type UserProviderProps = {
 
 const defaultContext: UserContextValues = {
   user: {
-    authorities: [],
-    name: "",
+    id: -1,
+    roles: [],
+    username: "",
     email: "",
   },
   updateToken: (_: string) => { },
@@ -58,21 +28,33 @@ const defaultContext: UserContextValues = {
   token: ""
 };
 
-export function hasAuthority(user: User, requiredAuthority: Authority): boolean {
+function getUserMappedAuthorities(user:User):MappedAuthority[]{
 
-  if (requiredAuthority.startsWith("ROLE")) {
-    switch (requiredAuthority) {
-      case Authority.ROLE_ADMIN: return user.authorities.includes(Authority.ROLE_ADMIN);
-      case Authority.ROLE_USER: return user.authorities.includes(Authority.ROLE_USER) || user.authorities.includes(Authority.ROLE_ADMIN);
-      default:
-        return false;
-    }
-  }
-  else return user.authorities.includes(requiredAuthority);
+  const uniqueAuthoritiesSet = new Set<MappedAuthority>();
+
+  user.roles.forEach(role => {
+    if (Object.values(MappedAuthority).includes(role.name as MappedAuthority))
+    uniqueAuthoritiesSet.add(role.name as MappedAuthority);
+    
+    role.authorities.forEach(authority => {
+      if (Object.values(MappedAuthority).includes(authority.authority as MappedAuthority))
+      uniqueAuthoritiesSet.add(authority.authority as MappedAuthority);
+    });
+  });
+
+  return Array.from(uniqueAuthoritiesSet);
+
 }
 
-export function hasAuthorities(user: User, requiredAuthorities: Authority[]): boolean {
-  return requiredAuthorities.every(authority => hasAuthority(user, authority));
+export function hasAuthorities(user: User, ...requiredAuthorities: MappedAuthority[]): boolean {
+
+  if(user.roles.some(role => role.name=MappedAuthority.ROLE_ADMIN))
+    return true;
+
+  const userAuthorities = getUserMappedAuthorities(user);
+
+  return requiredAuthorities.every(reqAuthority => userAuthorities.includes(reqAuthority));
+  
 }
 
 const USER_TOKEN_COOKIE_NAME = "token";
@@ -91,52 +73,16 @@ export const UserProvider = ({ children }: UserProviderProps) => {
       setUser(defaultContext.user);
     },
     onData: (data) => {
-      data.json().then((userObj: {
-        id: number
-        username: string,
-        email: string,
-        roles: {
-          id: number,
-          name: string,
-          authorities: {
-            id: number,
-            authority: string
-          }[]
-        }[],
-        hasError: boolean,
-        errorMsg: string
-      }) => {
+      data.json().then((userObj: UserData) => {
 
         if (userObj.hasError)
           throw new Error(userObj.errorMsg);
 
-        let authorities: Authority[] = [];
-
         console.log(userObj);
         
-        userObj.roles.forEach((role) => {
-
-          if (Object.values(Authority).includes(role.name as Authority)) {
-            authorities.push(role.name as Authority);
-          }
-
-          role.authorities.forEach((authority) => {
-
-            if (Object.values(Authority).includes(authority.authority as Authority)) {
-              authorities.push(authority.authority as Authority);
-            }
-          });
-
-
-        });
-
-        var newUser: User = {
-          name: userObj.username,
-          email: userObj.email,
-          authorities
-        };
-
+        var newUser: User = {...userObj};
         setUser(newUser);
+
       }).catch((error) => {
         console.error("Error parsing user from token:", error.message);
         setUser(defaultContext.user);

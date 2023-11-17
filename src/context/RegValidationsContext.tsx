@@ -1,99 +1,105 @@
 import { createContext, useEffect, useState } from "react";
 import { useFetch } from "../hooks/useFetch";
-
-type FieldsValidations = {
-    fieldName: string,
-    validations: {
-        regexString: string,
-        errorMsg: string
-    }[]
-}[];
+import { FieldValidations } from "../utils/models";
 
 type RegValidationsContextValues = {
-    fieldsValidations: FieldsValidations
-    hasError: boolean
-    isLoading: boolean
-}
+  fieldsValidations: FieldValidations[];
+  hasError: boolean;
+  isLoading: boolean;
+};
 
 type RegValidationProviderProps = {
-    children: React.ReactNode;
-}
+  children: React.ReactNode;
+};
 
 const defaultContext: RegValidationsContextValues = {
-    fieldsValidations: [],
-    hasError: false,
-    isLoading: false,
+  fieldsValidations: [],
+  hasError: false,
+  isLoading: false,
 };
 
+export const RegValidationsContext =
+  createContext<RegValidationsContextValues>(defaultContext);
 
-export const RegValidationsContext = createContext<RegValidationsContextValues>(defaultContext);
+export const RegValidationsProvider = ({
+  children,
+}: RegValidationProviderProps) => {
+  const [fieldsValidations, setFieldsValidations] = useState<
+    FieldValidations[]
+  >(defaultContext.fieldsValidations);
+  const [hasError, setHasError] = useState<boolean>(defaultContext.hasError);
 
-export const RegValidationsProvider = ({ children }: RegValidationProviderProps) => {
+  const { doFetch, isLoading } = useFetch({
+    service: "Authentication",
+    onError: (error) => {
+      console.error("Error fetching inputs validations: ", error);
+      setFieldsValidations(defaultContext.fieldsValidations);
+      setHasError(true);
+    },
+    onData: (data) => {
+      data
+        .json()
+        .then((userRequirements) => {
+          // userRequirements is a Map<String,Map<String,String>>
 
-    const [fieldsValidations, setFieldsValidations] = useState<FieldsValidations>(defaultContext.fieldsValidations);
-    const [hasError, setHasError] = useState<boolean>(defaultContext.hasError);
+          if (!userRequirements)
+            throw new Error("Invalid userRequirements json data");
 
-    const { doFetch, isLoading } = useFetch({
-        service: "Authentication",
-        onError: (error) => {
-            console.error("Error fetching inputs validations: ", error);
-            setFieldsValidations(defaultContext.fieldsValidations);
-            setHasError(true);
-        },
-        onData: (data) => {
-            data.json().then((userRequirements) => { // userRequirements is a Map<String,Map<String,String>>
+          const fieldsRecords = userRequirements as Record<
+            string,
+            Record<string, string>
+          >;
 
-                if (!userRequirements)
-                    throw new Error("Invalid userRequirements json data");
+          const fieldsVals: FieldValidations[] = Object.entries(
+            fieldsRecords
+          ).map(([fieldName, fieldValidations]) => {
+            return {
+              fieldName,
+              validations: Object.entries(fieldValidations).map(
+                ([regexString, errorMsg]) => {
+                  return {
+                    regexString,
+                    errorMsg,
+                  };
+                }
+              ),
+            };
+          });
 
-                const requirementsRecord = (userRequirements as Record<string, Record<string, string>>);
+          console.log("Inputs validations loaded ");
 
-                var fieldsVals: FieldsValidations =
-                    Object.entries(requirementsRecord).map(([fieldName, requirementsMap]) => ({
-                        fieldName,
-                        validations: Object.entries(requirementsMap).map(([regexString, errorMsg]) => ({
-                            regexString,
-                            errorMsg,
-                        })),
-                    }));
-
-                console.log("Inputs validations loaded ");
-
-                setFieldsValidations(fieldsVals);
-                setHasError(false);
-            }).catch((error) => {
-                console.error("Error parsing inputs validations: ", error);
-                setFieldsValidations(defaultContext.fieldsValidations);
-                setHasError(true);
-            });
-
-
-        }
-    });
-
-    useEffect(() => {
-        doFetch({
-            endpoint: 'request/getUserRequirements',
-            fetchParams: {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            }
+          setFieldsValidations(fieldsVals);
+          setHasError(false);
+        })
+        .catch((error) => {
+          console.error("Error parsing inputs validations: ", error);
+          setFieldsValidations(defaultContext.fieldsValidations);
+          setHasError(true);
         });
-    }, []);
+    },
+  });
 
+  useEffect(() => {
+    doFetch({
+      endpoint: "request/getUserRequirements",
+      fetchParams: {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    });
+  }, []);
 
-    const contextValues: RegValidationsContextValues = {
-        fieldsValidations,
-        hasError,
-        isLoading,
-    };
+  const contextValues: RegValidationsContextValues = {
+    fieldsValidations,
+    hasError,
+    isLoading,
+  };
 
-    return (
-        <RegValidationsContext.Provider value={contextValues}>
-            {children}
-        </RegValidationsContext.Provider>
-    );
+  return (
+    <RegValidationsContext.Provider value={contextValues}>
+      {children}
+    </RegValidationsContext.Provider>
+  );
 };
-

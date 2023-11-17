@@ -14,6 +14,7 @@ export function useLogin(handleResult: (sucess:boolean) => any) {
       console.error("Error during login:", error);
     },
     onData: (data) => {
+      
       data.text().then((text) => {
         if (data.status === 200) {
           setFeedBackStatus(false,textData.loginForm.feedback.onSuccess);
