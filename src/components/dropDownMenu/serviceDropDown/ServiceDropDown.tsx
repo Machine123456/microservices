@@ -1,10 +1,11 @@
-import { UserRole } from "../../../context/UserContext";
+import { Link } from "react-router-dom";
+import { hasAuthorities } from "../../../context/UserContext";
 import { useUser } from "../../../hooks/useCustomContext";
-import { Service, servicesData } from "../../../utils/servicesData";
-import { getServiceViewInfo } from "../../pageStructures/servicePage/ServicePage";
+import { Service, getUserServiceLinks, servicesData } from "../../pageStructures/servicePage/ServicePage";
 import DropDownMenu from "../DropDownMenu";
 import "./ServiceDropDown.css";
 import { useState } from "react";
+import { getHeadOfPath } from "../../../utils/funcs";
 
 type ServiceDropDownProps = {
   service: Service;
@@ -15,37 +16,27 @@ export default function ServiceDropDown({ service }: ServiceDropDownProps) {
   let { user } = useUser();
 
   const serviceData = servicesData[service];
+  const enable:boolean = hasAuthorities(user,serviceData.requiredAuthorities);
 
-  function displayLink(linkReq: UserRole): boolean {
-    switch (linkReq) {
-      case UserRole.Admin:
-        return user.role === UserRole.Admin;
-      case UserRole.User:
-        return user.role != UserRole.None;
-      default:
-        return true;
-    }
-  }
-
-  return (
+  return (<>
     <DropDownMenu
       imgSrc={serviceData.serviceImgPath}
       imgAlt={service}
       active={active}
       onToggle={setActive}
+      enable={enable}
     >
-      {serviceData.serviceViews.map((viewName, index) => {
-        const info = getServiceViewInfo(service, viewName);
-
-        if (displayLink(info.requiredRole))
-          return (
-            <div key={index} className="service-endpoint">
-              <a href={getServiceViewInfo(service,viewName).location}>
-                {viewName}
-              </a>
-            </div>
-          );
-      })}
+      {
+        enable &&
+        getUserServiceLinks(user, service).map(( linkPath, index) => {
+            return (
+              <div key={index} className="service-endpoint">
+                <Link to={linkPath} onClick={() => setActive(false)}> {getHeadOfPath(linkPath)}</Link>
+              </div>
+            );
+        })}
     </DropDownMenu>
+  </>
+
   );
 }

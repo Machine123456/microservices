@@ -6,7 +6,6 @@ import "./UserMenu.css";
 import PopupMenu from "../../../utils/popupMenu/PopupMenu";
 import FormToggle from "../../../forms/formToggle/FormToggle";
 import { FormType } from "../../../forms/formToggle/FormToggle.hooks";
-import { UserRole } from "../../../../context/UserContext";
 import { ClickBtn3 } from "../../../utils/buttons/customBtn/CustomBtn";
 
 export default function UserMenu() {
@@ -21,7 +20,7 @@ export default function UserMenu() {
         <LoadingCircle />
       ) : (
         <>
-          {(!user || user.role === UserRole.None) && (
+          {(!user || user.name === "") && (
             <>
               <ClickBtn3
                 text={textData.loginForm.form.title}

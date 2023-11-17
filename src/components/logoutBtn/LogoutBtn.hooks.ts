@@ -18,7 +18,7 @@ export function useLogout(onLogout: () => any) {
         }
     });
 
-    const logout = () => doFetch({ endpoint: 'logout' });
+    const logout = () => doFetch({ endpoint: 'request/logout' });
 
     return { logout, isLoading };
 

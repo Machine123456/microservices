@@ -10,6 +10,12 @@
     text-decoration: none;
     /* Adjusted text color */
   }
+
+  .user-authorities {
+    margin: 0px;
+    padding: 0px;
+  } 
+
   
 }
 

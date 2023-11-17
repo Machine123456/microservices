@@ -1,0 +1,16 @@
+.service-page {
+    position: relative;
+
+    width: var(--page-width);
+    box-sizing: border-box;
+
+    margin-block: 1em;
+    color: var(--details-color);
+
+    .close-btn1 {
+      position: absolute;
+      top: -.5em;
+      left: -.5em;
+    }
+
+  }

@@ -4,7 +4,7 @@ import ServicesHeader from "./components/pageStructures/servicesHeader/ServicesH
 import { ThemeProvider } from "./context/ThemeContext";
 import { UserProvider } from "./context/UserContext";
 import { LanguageProvider } from "./context/LanguageContext";
-import MainPage from "./components/pageStructures/mainPage/MainPage";
+import { Outlet } from "react-router-dom";
 import ServicePage from "./components/pageStructures/servicePage/ServicePage";
 
 export default function App() {
@@ -12,27 +12,14 @@ export default function App() {
     <ThemeProvider>
       <LanguageProvider>
         <UserProvider>
-          <Inner />
+
+          <ServicesHeader />
+          <ServicePage>
+            <Outlet />
+          </ServicePage>
+          
         </UserProvider>
       </LanguageProvider>
     </ThemeProvider>
-  );
-}
-
-function Inner() {
-
-  console.log("Rerender");
-  
-
-  return (
-    <>
-
-      <ServicesHeader />
-      <ServicePage />
-      <div className="page-body">
-        <MainPage/>
-      </div>
-    </>
-
   );
 }

@@ -40,7 +40,7 @@ export function useLogin(handleResult: (sucess:boolean) => any) {
     //const csrfToken = document.querySelector('input[name="_csrf"]').value;
     
     doFetch({
-      endpoint: "login",
+      endpoint: "request/login",
       fetchParams: {
         method: "POST",
         body: JSON.stringify({

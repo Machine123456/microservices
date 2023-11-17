@@ -1,4 +1,5 @@
 import { createContext, useEffect, useState } from "react";
+import {  getCookie, updateCookie } from "../utils/cookies";
 
 export type ThemeData = {
   mainColor: string;
@@ -8,14 +9,14 @@ export type ThemeData = {
 };
 
 export enum Theme {
-  Day,
-  Night,
+  Day = "Day",
+  Night = "Night",
 }
 
 type ThemeContextValues = {
   themeData: ThemeData;
   theme: Theme;
-  setTheme: React.Dispatch<React.SetStateAction<Theme>>;
+  setTheme: (React.Dispatch<React.SetStateAction<Theme>>);
 };
 
 type ThemeProviderProps = {
@@ -38,7 +39,12 @@ const themes: { [key in Theme]: ThemeData } = {
   },
 };
 
-const defaultTheme: Theme = Theme.Night;
+const THEME_COOKIE_NAME = "theme";
+
+const storedThemeString = getCookie(THEME_COOKIE_NAME);
+const defaultTheme: Theme = Object.values(Theme).includes(storedThemeString as Theme)
+  ? (storedThemeString as Theme)
+  : Theme.Day;
 
 const defaultContext: ThemeContextValues = {
   themeData: themes[defaultTheme],
@@ -51,11 +57,19 @@ export const ThemeContext = createContext<ThemeContextValues>(defaultContext);
 export const ThemeProvider = ({ children }: ThemeProviderProps) => {
   var [activeTheme, setActiveTheme] = useState<Theme>(defaultTheme);
 
+  const updateTheme = (setTheme: React.SetStateAction<Theme>) => {
+    const themeValue = typeof setTheme === 'function' ? setTheme(activeTheme) : setTheme;
+
+    updateCookie(THEME_COOKIE_NAME,themeValue);
+    setActiveTheme(themeValue);
+  }
+
   const contextValues: ThemeContextValues = {
     themeData: themes[activeTheme],
     theme: activeTheme,
-    setTheme: setActiveTheme,
+    setTheme: updateTheme,
   };
+
 
   useEffect(() => {
     applyTheme(themes[activeTheme])

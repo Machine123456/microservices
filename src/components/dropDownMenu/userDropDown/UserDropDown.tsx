@@ -1,7 +1,7 @@
 import DropDownMenu from "../DropDownMenu";
 import UserSettings from "./userSettings/UserSettings";
 import "./UserDropDown.css";
-import { User, UserRole } from "../../../context/UserContext";
+import { User } from "../../../context/UserContext";
 import LogoutBtn from "../../logoutBtn/LogoutBtn";
 import LanguageSelector from "../../utils/enumSelector/languageSelector/LanguageSelector";
 import ThemeToggle from "../../utils/toggleButton/themeToggle/ThemeToggle";
@@ -17,9 +17,9 @@ export default function UserDropDown({ user }: UserDropDownProps) {
     
   
     return (
-    <DropDownMenu  imgSrc="/user.png" active={active} onToggle={setActive}>
+    <DropDownMenu  imgSrc="/user.png" active={active} onToggle={setActive} imgAlt="settings">
       <div className="user-content">
-        {!user || user.role === UserRole.None ? (
+        {!user || user.name === "" ? (
           <>
             <ThemeToggle/>
             <LanguageSelector />

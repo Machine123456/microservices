@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { Service, getServiceUrl } from "../utils/servicesData";
+import { Service } from "../components/pageStructures/servicePage/ServicePage";
 
 type handleFetchProps = {
     onError?: (error: string) => any,
@@ -9,6 +9,14 @@ type handleFetchProps = {
     //name: string //for debug
 }
 
+const getServiceUrl = (service: Service): string => {
+    switch (service) {
+      case "Authentication":
+        return import.meta.env.VITE_AUTH_SERVICE;
+      case "Product":
+        return import.meta.env.VITE_PRODUCT_SERVICE;
+    }
+  };
 
 export function useFetch({service, onError, onData}: handleFetchProps){
 
@@ -35,6 +43,10 @@ export function useFetch({service, onError, onData}: handleFetchProps){
 
         await fetch(getServiceUrl(service) + endpoint,{
             ...fetchParams,
+            headers: {
+                ...fetchParams?.headers,
+               // "Access-Control-Allow-Origin": "true",
+            },
             signal: abortControllerRef.current.signal,
         })
         .then(onData)

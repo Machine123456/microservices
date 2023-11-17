@@ -24,19 +24,11 @@ body{
   background-color: var(--main-color);
 
   min-width: 100%;
-  min-height: 100%;
+  min-height: 100vh;
 
   display: flex;
   align-items: center;
   flex-direction: column;
   justify-content: start;
-
-  .page-body {
-    width: var(--page-width);
-    box-sizing: border-box;
-
-    margin-block: 1em;
-
-  }
 
 }

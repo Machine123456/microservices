@@ -41,40 +41,39 @@ export const RegValidationsProvider = ({ children }: RegValidationProviderProps)
             setHasError(true);
         },
         onData: (data) => {
-            try {
-                data.json().then((userRequirements) => { // userRequirements is a Map<String,Map<String,String>>
-                
-                    if (!userRequirements)
-                        throw new Error("Invalid userRequirements json data");
+            data.json().then((userRequirements) => { // userRequirements is a Map<String,Map<String,String>>
 
-                    const requirementsRecord = (userRequirements as Record<string, Record<string, string>>);
+                if (!userRequirements)
+                    throw new Error("Invalid userRequirements json data");
 
-                    var fieldsVals: FieldsValidations =
-                        Object.entries(requirementsRecord).map(([fieldName, requirementsMap]) => ({
-                            fieldName,
-                            validations: Object.entries(requirementsMap).map(([regexString, errorMsg]) => ({
-                                regexString,
-                                errorMsg,
-                            })),
-                        }));
+                const requirementsRecord = (userRequirements as Record<string, Record<string, string>>);
 
-                    console.log("Inputs validations loaded ");
-                    
-                    setFieldsValidations(fieldsVals);
-                    setHasError(false);
-                });
-            }
-            catch (error) {
+                var fieldsVals: FieldsValidations =
+                    Object.entries(requirementsRecord).map(([fieldName, requirementsMap]) => ({
+                        fieldName,
+                        validations: Object.entries(requirementsMap).map(([regexString, errorMsg]) => ({
+                            regexString,
+                            errorMsg,
+                        })),
+                    }));
+
+                console.log("Inputs validations loaded ");
+
+                setFieldsValidations(fieldsVals);
+                setHasError(false);
+            }).catch((error) => {
                 console.error("Error parsing inputs validations: ", error);
                 setFieldsValidations(defaultContext.fieldsValidations);
                 setHasError(true);
-            }
+            });
+
+
         }
     });
 
     useEffect(() => {
         doFetch({
-            endpoint: 'getUserRequirements',
+            endpoint: 'request/getUserRequirements',
             fetchParams: {
                 method: "GET",
                 headers: {
@@ -89,7 +88,7 @@ export const RegValidationsProvider = ({ children }: RegValidationProviderProps)
         fieldsValidations,
         hasError,
         isLoading,
-      };
+    };
 
     return (
         <RegValidationsContext.Provider value={contextValues}>

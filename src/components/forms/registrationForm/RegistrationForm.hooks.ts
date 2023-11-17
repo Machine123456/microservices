@@ -1,35 +1,39 @@
 import { RefObject, useRef, useState } from "react";
-import { useLanguage, useRegValidations } from "../../../hooks/useCustomContext";
+import { useLanguage, useRegValidations, useUser } from "../../../hooks/useCustomContext";
 import { InputFeedbackRef } from "../../inputFeedback/InputFeedback";
 import { useFetch } from "../../../hooks/useFetch";
 
 
 
 
-export function useRegistration(handleResult: (sucess:boolean) => any) {
+export function useRegistration(handleResult: (sucess: boolean) => any) {
 
     const [feedback, setFeedback] = useState("");
+    let { updateToken } = useUser();
 
-    const setFeedbackStatus = (hasError:boolean, text:string) => {
+    const setFeedbackStatus = (hasError: boolean, text: string) => {
         setFeedback(text);
         handleResult(!hasError);
     }
-    const {textData} = useLanguage()
+    const { textData } = useLanguage()
     const { doFetch, isLoading } = useFetch({
         service: "Authentication",
         onError: (error) => {
             console.error('Error during registration:', error);
-            setFeedbackStatus(true,textData.registrationForm.feedback.onServerFail);
+            setFeedbackStatus(true, textData.registrationForm.feedback.onServerFail);
             //setFeedback("Error during registration, check logs for more info");
         },
         onData: (data) => {
             data.text()
-            .then(res =>
-                data.status === 200 ?  
-                setFeedbackStatus(false,textData.registrationForm.feedback.onSuccess + " " + res) : 
-                setFeedbackStatus(true,textData.registrationForm.feedback.onFail + res)
-                //setFeedback(data.status === 200 ?"User registered successfully with token: " + res : res)
-            );
+                .then(res => {
+                    if (data.status === 200) {
+                        updateToken(res);
+                        setFeedbackStatus(false, textData.registrationForm.feedback.onSuccess + " " + res)
+                    }
+                    else
+                        setFeedbackStatus(true, textData.registrationForm.feedback.onFail + res)
+                    //setFeedback(data.status === 200 ?"User registered successfully with token: " + res : res)
+                });
         }
     });
 
@@ -37,13 +41,13 @@ export function useRegistration(handleResult: (sucess:boolean) => any) {
     async function register(postBody: {}) {
 
         if (!postBody || Object.keys(postBody).length === 0) {
-            setFeedbackStatus(true,textData.registrationForm.feedback.bodyNotFound);
+            setFeedbackStatus(true, textData.registrationForm.feedback.bodyNotFound);
             //setFeedback("No post body found");
             return;
         };
 
         doFetch({
-            endpoint:'register',
+            endpoint: 'request/register',
             fetchParams: {
                 method: "POST",
                 body: JSON.stringify(postBody)
@@ -93,7 +97,7 @@ export function useFieldsValidation() {
 }
 
 export function usePostBodyFields() {
-    const {textData} = useLanguage()
+    const { textData } = useLanguage()
 
     type PostBodyField = {
         name: string,

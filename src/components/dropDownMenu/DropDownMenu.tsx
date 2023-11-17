@@ -2,11 +2,12 @@ import { useEffect, useRef } from "react";
 import "./DropDownMenu.css";
 
 type DropDownMenuProps = {
-  children: React.ReactNode,
+  children?: React.ReactNode,
   imgSrc?: string,
   imgAlt?: string,
-  onToggle: (active:boolean) => any,
-  active: boolean
+  onToggle: (active: boolean) => any,
+  active: boolean,
+  enable?: boolean
 };
 
 
@@ -16,6 +17,7 @@ const DropDownMenu = ({
   active,
   onToggle,
   imgAlt = "",
+  enable = true
 }: DropDownMenuProps) => {
   const ddRef = useRef<HTMLDivElement>(null);
 
@@ -34,15 +36,16 @@ const DropDownMenu = ({
   }, []);
 
   const handleImgClick = () => {
-   /* console.log("Img Clicked");*/
-
-    onToggle(!active);
+    /* console.log("Img Clicked");*/
+    enable && onToggle(!active);
   }
 
   return (
-    <div className={"dropdown " + (active ? " active" : "") } ref={ddRef}>
-      <img src={imgSrc} alt={imgAlt} onClick={ handleImgClick} />
-      <div className="dropdown-content">{children}</div>
+    <div className={"dropdown " + (enable ? active ? " active" : "" : " disable")} ref={ddRef}>
+      <div title={imgAlt} className="dropdown-image">
+        <img src={imgSrc} alt={imgAlt}  onClick={handleImgClick} />
+      </div>
+      {children && <div className="dropdown-content">{children}</div>}
     </div>
   );
 };
