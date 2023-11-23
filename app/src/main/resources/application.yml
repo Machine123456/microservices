@@ -1,0 +1,45 @@
+api:
+    allowedOrigin: ${GATEWAY_SERVER:http://localhost:8091}
+    server:
+        port: ${SERVER_PORT:8093}
+    database:
+        host: ${DATABASE_HOST:database-1.chg7ujdhhts7.eu-west-3.rds.amazonaws.com} # localhost
+        port: ${DATABASE_PORT:3306}
+        name: ${DATABASE_NAME:template_service}
+        pass: ${DATABASE_PSD:rootroot} # should be replaced with an template service user
+        user: ${DATABASE_UNAME:root}
+
+spring:
+    datasource:
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://${api.database.host}:${api.database.port}/${api.database.name}?createDatabaseIfNotExist=true
+        username: ${api.database.user}
+        password: ${api.database.pass}
+    jpa:
+        hibernate:
+            ddl-auto: create-drop #update
+        show-sql: false
+        properties:
+            hibernate:
+                dialect: org.hibernate.dialect.MySQLDialect
+    mvc:
+        static-path-pattern: /static/**
+
+management:
+  endpoints:
+    enabled-by-default: false
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      enabled: true
+      cache:
+        time-to-live: "10s"
+    info: 
+      enabled: true
+      cache:
+        time-to-live: "100s"
+
+server:
+    port: ${api.server.port}
