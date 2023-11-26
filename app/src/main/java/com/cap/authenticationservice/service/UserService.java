@@ -1,6 +1,7 @@
 package com.cap.authenticationservice.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -60,16 +61,29 @@ public class UserService {
     }
 
     /* Find By */
-    public UserResponse findUserByUsername(String uname) throws IllegalArgumentException {
+
+    public UserResponse getUser(String uname) throws IllegalArgumentException {
         var user = userRepository.findByUsername(uname)
                 .orElseThrow(() -> new IllegalArgumentException("User not found with username: " + uname));
         return mapToUserResponse(user);
     }
 
-    public UserResponse findUserById(Long userId) throws IllegalArgumentException {
+    public UserResponse getUser(Long userId) throws IllegalArgumentException {
         var user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + userId));
         return mapToUserResponse(user);
+    }
+
+    public RoleResponse getRole(Long roleId) throws IllegalArgumentException {
+        var role = roleRepository.findById(roleId)
+                .orElseThrow(() -> new IllegalArgumentException("Role not found with id: " + roleId));
+        return mapToRoleResponse(role);
+    }
+
+    public AuthorityResponse getAuthority(Long authorityId) throws IllegalArgumentException {
+        var authority = authorityRepository.findById(authorityId)
+                .orElseThrow(() -> new IllegalArgumentException("Authority not found with id: " + authorityId));
+        return mapToAuthorityResponse(authority);
     }
 
     /* Create */
@@ -110,7 +124,7 @@ public class UserService {
 
     /* Update */
 
-    public void updateUserRoles(long id, String... rolesStr) throws IllegalArgumentException {
+    public void setUserRoles(long id, String... rolesStr) throws IllegalArgumentException {
 
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + id));
@@ -118,6 +132,18 @@ public class UserService {
         var userRoles = fetchRolesStrings(rolesStr);
 
         user.setRoles(userRoles);
+
+        userRepository.save(user);
+    }
+
+    public void setUserRoles(long id, long... rolesIds) throws IllegalArgumentException {
+
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + id));
+
+        var userRoles = roleRepository.findAllById(Arrays.stream(rolesIds).boxed().collect(Collectors.<Long>toList()));
+
+        user.setRoles(new HashSet<Role>(userRoles));
 
         userRepository.save(user);
     }
@@ -136,13 +162,24 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public void updateRoleAuthorities(long id, String... authoritiesStr) throws IllegalArgumentException {
+    public void setRoleAuthorities(long id, String... authoritiesStr) throws IllegalArgumentException {
         Role role = roleRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Role not found with id: " + id));
 
         var roleAuthorities = fetchAuthoritiesStrings(authoritiesStr);
 
         role.setAuthorities(roleAuthorities);
+
+        roleRepository.save(role);
+    }
+
+     public void setRoleAuthorities(long id, long... authoritiesIds) throws IllegalArgumentException {
+        Role role = roleRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Role not found with id: " + id));
+
+        var roleAuthorities = authorityRepository.findAllById(Arrays.stream(authoritiesIds).boxed().collect(Collectors.<Long>toList()));
+
+        role.setAuthorities(new HashSet<Authority>(roleAuthorities));
 
         roleRepository.save(role);
     }

@@ -4,14 +4,12 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cap.authenticationservice.dto.AuthorityRequest;
@@ -31,14 +29,14 @@ public class UserController {
 
     private final UserService userService;
 
-    /* Users 
+    /*
+     * Users
      * 
      * Create User is registerUser method of AuthenticationController
      * 
-    */
+     */
 
     @GetMapping("/users")
-    @ResponseBody
     public ResponseEntity<List<UserResponse>> getUsers() {
 
         try {
@@ -49,45 +47,66 @@ public class UserController {
         }
     }
 
-    @PutMapping("/users/{id}")
-    public ResponseEntity<String> updateUser(@PathVariable("id") long id, @RequestBody UserRequest userRequest) {
-
+    @RequestMapping(value = "/users", method = RequestMethod.GET, params = "id")
+    public ResponseEntity<UserResponse> getUser(
+            @RequestParam("id") long id) {
         try {
-            userService.updateUser(id, userRequest);
-            return ResponseEntity.ok("User Updated");
-
+            var user = userService.getUser(id);
+            return ResponseEntity.ok(user);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update user " + id +" : " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(null);
         }
-
     }
 
-    @DeleteMapping("/users/{id}")
-    public ResponseEntity<String> deleteUser(@PathVariable("id") long id) {
+    @RequestMapping(value = "/users", method = RequestMethod.PUT, params = "id")
+    public ResponseEntity<String> updateUser(
+            @RequestParam("id") long id,
+            @RequestBody Object requestBody) {
+        try {
+            if (requestBody instanceof UserRequest) {
+                // Handle user update logic
+                userService.updateUser(id, (UserRequest) requestBody);
+                return ResponseEntity.ok("User Updated");
+            } else if (requestBody instanceof long[]) {
+                // Handle setting user roles logic
+                userService.setUserRoles(id, (long[]) requestBody);
+                return ResponseEntity.ok("User Roles Set");
+            } else {
+                // Handle unsupported request body type
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid request body");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to process request for user " + id + ": " + e.getMessage());
+        }
+    }
+
+     @RequestMapping(value = "/users", method = RequestMethod.DELETE, params = "id")
+    public ResponseEntity<String> deleteUser(@RequestParam("id") long id) {
         try {
             userService.deleteUser(id);
             return ResponseEntity.ok("User Deleted");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to delete user " + id +" : " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to delete user " + id + " : " + e.getMessage());
         }
     }
 
     /* Roles */
- 
+
     @PostMapping("/roles")
-    @ResponseBody
     public ResponseEntity<String> createRole(@RequestBody RoleRequest roleRequest) {
 
         try {
             userService.createRole(roleRequest);
             return ResponseEntity.ok("Role Created");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body("Failed to create role \"" + roleRequest.getName() +"\" : " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
+                    .body("Failed to create role \"" + roleRequest.getName() + "\" : " + e.getMessage());
         }
     }
 
     @GetMapping("/roles")
-    @ResponseBody
     public ResponseEntity<List<RoleResponse>> getRoles() {
 
         try {
@@ -98,45 +117,65 @@ public class UserController {
         }
     }
 
-     @PutMapping("/roles/{id}")
-    public ResponseEntity<String> updateRole(@PathVariable("id") long id, @RequestBody RoleRequest roleRequest) {
+    @RequestMapping(value = "/roles", method = RequestMethod.GET, params = "id")
+    public ResponseEntity<RoleResponse> getRole(@RequestParam("id") long id) {
 
         try {
-            userService.updateRole(id, roleRequest);
-            return ResponseEntity.ok("Role Updated");
-
+            var role = userService.getRole(id);
+            return ResponseEntity.ok(role);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update role " + id +" : " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(null);
         }
-
     }
 
-    @DeleteMapping("/roles/{id}")
-    public ResponseEntity<String> deleteRole(@PathVariable("id") long id) {
+    @RequestMapping(value = "/roles", method = RequestMethod.PUT, params = "id")
+    public ResponseEntity<String> updateRoleOrSetAuthorities(@RequestParam("id") long id,
+            @RequestBody Object requestBody) {
+        try {
+            if (requestBody instanceof RoleRequest) {
+                // Handle role update logic
+                userService.updateRole(id, (RoleRequest) requestBody);
+                return ResponseEntity.ok("Role Updated");
+            } else if (requestBody instanceof long[]) {
+                // Handle setting role authorities logic
+                userService.setRoleAuthorities(id, (long[]) requestBody);
+                return ResponseEntity.ok("Role Authorities Set");
+            } else {
+                // Handle unsupported request body type
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid request body");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to process request for role " + id + ": " + e.getMessage());
+        }
+    }
+
+    @RequestMapping(value = "/roles", method = RequestMethod.DELETE, params = "id")
+    public ResponseEntity<String> deleteRole(@RequestParam("id") long id) {
         try {
             userService.deleteRole(id);
             return ResponseEntity.ok("Role Deleted");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to delete role " + id +" : " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to delete role " + id + " : " + e.getMessage());
         }
     }
 
     /* Authorities */
 
-     @PostMapping("/authorities")
-    @ResponseBody
+    @PostMapping("/authorities")
     public ResponseEntity<String> createAuthority(@RequestBody AuthorityRequest authorityRequest) {
 
         try {
             userService.createAuthority(authorityRequest);
             return ResponseEntity.ok("Authority Created");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body("Failed to create authority \"" + authorityRequest.getAuthority() +"\" : " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
+                    .body("Failed to create authority \"" + authorityRequest.getAuthority() + "\" : " + e.getMessage());
         }
     }
 
     @GetMapping("/authorities")
-    @ResponseBody
     public ResponseEntity<List<AuthorityResponse>> getAuthorities() {
 
         try {
@@ -147,31 +186,41 @@ public class UserController {
         }
     }
 
-    
-     @PutMapping("/authorities/{id}")
-    public ResponseEntity<String> updateAuthority(@PathVariable("id") long id, @RequestBody AuthorityRequest authorityRequest) {
+    @RequestMapping(value = "/authorities", method = RequestMethod.GET, params = "id")
+    public ResponseEntity<AuthorityResponse> getAuthority(@RequestParam("id") long id) {
+
+        try {
+            var authority = userService.getAuthority(id);
+            return ResponseEntity.ok(authority);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(null);
+        }
+    }
+
+    @RequestMapping(value = "/authorities", method = RequestMethod.PUT, params = "id")
+    public ResponseEntity<String> updateAuthority(@RequestParam("id") long id,
+            @RequestBody AuthorityRequest authorityRequest) {
 
         try {
             userService.updateAuthority(id, authorityRequest);
             return ResponseEntity.ok("Authority Updated");
 
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update authority " + id +" : " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to update authority " + id + " : " + e.getMessage());
         }
 
     }
 
-    @DeleteMapping("/authorities/{id}")
-    public ResponseEntity<String> deleteAuthority(@PathVariable("id") long id) {
+    @RequestMapping(value = "/authorities", method = RequestMethod.DELETE, params = "id")
+    public ResponseEntity<String> deleteAuthority(@RequestParam("id") long id) {
         try {
             userService.deleteAuthority(id);
             return ResponseEntity.ok("Authority Deleted");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to delete authority " + id +" : " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to delete authority " + id + " : " + e.getMessage());
         }
     }
-
-
-
 
 }

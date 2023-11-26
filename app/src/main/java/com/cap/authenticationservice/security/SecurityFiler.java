@@ -30,9 +30,14 @@ public class SecurityFiler extends OncePerRequestFilter {
 
         String token = tokenService.recoverToken(request);
 
-        if(doAuthentication(request, token))
-            response.addCookie(tokenService.generateTokenCookie(token));
-
+        if(doAuthentication(request, token)){
+            try {
+                response.addCookie(tokenService.generateTokenCookie(token));
+            } catch (Exception e) {
+               System.out.println("Failed create a token cookie. Token: \"" + token + "\" Error: " + e.getMessage());
+            }
+            
+        }
         filterChain.doFilter(request, response); 
     }
 
