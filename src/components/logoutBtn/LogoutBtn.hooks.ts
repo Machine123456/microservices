@@ -10,11 +10,9 @@ export function useLogout(onLogout: () => any) {
         onError: (error) => {
             console.error('Error during logout:', error);
         },
-        onData: (data) => {
-            if (data.status === 200){
-                updateToken(null);
-                onLogout();
-            }
+        onData: () => {
+            updateToken(null);
+            onLogout();
         }
     });
 

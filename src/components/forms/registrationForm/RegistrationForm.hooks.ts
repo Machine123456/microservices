@@ -20,47 +20,39 @@ export function useRegistration(handleResult: (sucess: boolean) => any) {
         service: "Authentication",
         onError: (error) => {
             console.error('Error during registration:', error);
-            setFeedbackStatus(true, textData.registrationForm.feedback.onServerFail);
+            setFeedbackStatus(true, textData.registrationForm.feedback.onFail + " " + error);
             //setFeedback("Error during registration, check logs for more info");
         },
-        onData: (data) => {
-            data.text()
-                .then(res => {
-                    if (data.status === 200) {
-                        updateToken(res);
-                        setFeedbackStatus(false, textData.registrationForm.feedback.onSuccess + " " + res)
-                    }
-                    else
-                        setFeedbackStatus(true, textData.registrationForm.feedback.onFail + res)
-                    //setFeedback(data.status === 200 ?"User registered successfully with token: " + res : res)
-                });
+        onData: ({ text }) => {
+            updateToken(text);
+            setFeedbackStatus(false, textData.registrationForm.feedback.onSuccess + " " + text)
         }
     });
 
 
-    async function register(postBody: {}) {
+async function register(postBody: {}) {
 
-        if (!postBody || Object.keys(postBody).length === 0) {
-            setFeedbackStatus(true, textData.registrationForm.feedback.bodyNotFound);
-            //setFeedback("No post body found");
-            return;
-        };
+    if (!postBody || Object.keys(postBody).length === 0) {
+        setFeedbackStatus(true, textData.registrationForm.feedback.bodyNotFound);
+        //setFeedback("No post body found");
+        return;
+    };
 
-        doFetch({
-            endpoint: 'request/register',
-            fetchParams: {
-                method: "POST",
-                body: JSON.stringify(postBody)
-                , headers: {
-                    'Content-Type': 'application/json',
-                    // 'X-CSRF-TOKEN': csrfToken,
-                }
+    doFetch({
+        endpoint: 'request/register',
+        fetchParams: {
+            method: "POST",
+            body: JSON.stringify(postBody)
+            , headers: {
+                'Content-Type': 'application/json',
+                // 'X-CSRF-TOKEN': csrfToken,
             }
+        }
 
-        });
-    }
+    });
+}
 
-    return { register, isLoading, feedback };
+return { register, isLoading, feedback };
 }
 
 export function useFieldsValidation() {

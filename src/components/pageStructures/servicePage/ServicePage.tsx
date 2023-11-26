@@ -1,73 +1,75 @@
 import React from "react";
 import { hasAuthorities } from "../../../context/UserContext";
 import "./ServicePage.css";
-import { Navigate, Outlet, RouteObject, createBrowserRouter, useNavigate } from "react-router-dom";
+import { Navigate, Outlet, RouteObject, createBrowserRouter, useNavigate, useOutlet } from "react-router-dom";
 import App from "../../../App";
 import MainPage from "../mainPage/MainPage";
-import { CloseBtn1 } from "../../utils/buttons/customBtn/CustomBtn";
+import { SimpleBtn1 } from "../../utils/buttons/customBtn/CustomBtn";
 import RequireAuthoritiesRoute from "./RequireRoleRoute";
-import { MappedAuthority, User } from "../../../utils/models";
-import FetchDataPage from "./fetchDataPage/FetchDataPage";
+import { FetchDataType, MappedAuthority, User } from "../../../utils/models";
+import DataList from "./dataList/DataList";
+import DataDetails from "./dataDetails/DataDetails";
 
 export const ServicesList = ["Authentication", "Product"] as const;
 export type Service = (typeof ServicesList)[number];
+
+
+const SERVICES_PATH_NAME = "service";
 
 export type ServiceData = {
   name: string
   element: JSX.Element
   serviceImgPath?: string
-  requiredAuthorities: MappedAuthority[]
+  requiredAuthorities: string[][] | string[]
 
+  isPage: boolean
   views?: ServiceData[];
 };
 
-const defaultServiceData = {
+const defaultServiceData: ServiceData = {
   name: "",
   element: <Outlet />,
   serviceImgPath: undefined,
   requiredAuthorities: [],
-  views: undefined
+  isPage: true,
+  views: undefined,
+
 }
 
-const ServiceWrapper = ({ children }: { children: React.ReactNode }) => {
-  const navigate = useNavigate();
+const getDataTypeView = (dataType: FetchDataType): ServiceData => {
+  return {
+    ...defaultServiceData,
+    name: dataType,
+    requiredAuthorities: ["READ_" + dataType.toUpperCase()],
+    element: <DataList dataType={dataType} />,
+    views: [
+      {
+        ...defaultServiceData,
+        name: ":id",
+        requiredAuthorities: ["READ_" + dataType.toUpperCase()], //TODO change to "read details" or something
+        element: <DataDetails dataType={dataType} />
+      },
+    ]
+  }
 
-  return (<>
-    <CloseBtn1 onClick={() => navigate("/")} />
-    {children}
-  </>);
 }
+
 
 export const servicesData: { [service in Service]: ServiceData } = {
   Authentication: {
     ...defaultServiceData,
     name: "authentication",
-    element: <Outlet />,
+    isPage: true,
     serviceImgPath: "/authicon.png",
-    requiredAuthorities: [],
+    requiredAuthorities: [[MappedAuthority.READ_USER],[MappedAuthority.READ_ROLE],[MappedAuthority.READ_AUTHORITY]],
     views: [
-      {
-        ...defaultServiceData,
-        name: "users",
-        requiredAuthorities: [],
-        element: <FetchDataPage dataType="user" />
-      },
-      {
-        ...defaultServiceData,
-        name: "roles",
-        requiredAuthorities: [],
-        element: <FetchDataPage dataType="role" />
-      },
-      {
-        ...defaultServiceData,
-        name: "authorities",
-        requiredAuthorities: [],
-        element: <FetchDataPage dataType="authority" />
-      },
-      {
+      getDataTypeView("user"),
+      getDataTypeView("role"),
+      getDataTypeView("authority"),
+      { 
         ...defaultServiceData,
         name: "admin",
-        requiredAuthorities: [],
+        requiredAuthorities: [MappedAuthority.ROLE_ADMIN],
         element: <div>admin</div>
       },
     ]
@@ -75,7 +77,7 @@ export const servicesData: { [service in Service]: ServiceData } = {
   Product: {
     ...defaultServiceData,
     name: "product",
-    element: <Outlet />,
+    isPage: false,
     serviceImgPath: "/producticon.png",
     requiredAuthorities: [MappedAuthority.ROLE_USER],
     views: [
@@ -94,49 +96,62 @@ export const servicesData: { [service in Service]: ServiceData } = {
   },
 };
 
+export const getUserServiceLinks = (user: User, service: Service): string[] => {
 
-
-export const getUserServiceLinks = (user: User,service: Service): string[] => {
-
-  const aux = (data: ServiceData, path: string): string[] => {
+  const aux = (data: ServiceData, path: string, isHidden: boolean): string[] => {
     {
       const newPath = path + "/" + data.name;
-      if (!data.views)
-        return [newPath];
 
       let links: string[] = [];
-      data.views.forEach((viewData: ServiceData) => {
+
+      isHidden ||= data.name.startsWith(":");
+
+      if (data.isPage && !isHidden)
+        links.push(newPath);
+
+      data.views?.forEach((viewData: ServiceData) => {
         if (hasAuthorities(user, ...viewData.requiredAuthorities))
-          links = [...links, ...aux(viewData, newPath)]
+          links = [...links, ...aux(viewData, newPath, isHidden)]
       })
       return links;
     }
   }
 
-  return aux(servicesData[service], "service");
+  return aux(servicesData[service], SERVICES_PATH_NAME, false);
 }
 
-const handleRoutes = (routes: RouteObject[]): RouteObject[] => [
-  {
-    path: "",
-    element: <Navigate to="/" />
-  },
-  ...routes,
-  {
-    path: "*",
-    element: <Navigate to="/" />
-  },
-]
+const mapToRouteObject = (data: ServiceData, returnPath: string, path: string): RouteObject => {
 
-const mapToRouteObject = (data: ServiceData): RouteObject => {
+  //
+  const currentPath: string = path + "/" + data.name;
+  const nextReturnPath = data.isPage ? currentPath : returnPath;
+
+  const dataViews = data.views ?
+    data.views.map((viewData) => mapToRouteObject(viewData, nextReturnPath, currentPath))
+    : undefined;
+
+  const children = dataViews ?
+    !data.isPage ?
+      [
+        {
+          path: "",
+          element: <Navigate to="/" />
+        },
+        ...dataViews,
+      ] :
+      dataViews
+    : undefined;
+
+
   return {
     path: data.name,
-    element: <RequireAuthoritiesRoute authorities={data.requiredAuthorities}> {data.element} </RequireAuthoritiesRoute>,
-    children: data.views ? handleRoutes(data.views.map((viewData) => mapToRouteObject(viewData))) : undefined
+    element: <ServiceWrapper data={data} returnPath={returnPath} />,
+    children
   }
 }
 
-const serviceRouteObj: RouteObject[] = Object.entries(servicesData).map(([_, serviceData]) => mapToRouteObject(serviceData));
+const serviceRouteObj: RouteObject[] = Object.entries(servicesData).map(([_, serviceData]) => mapToRouteObject(serviceData, "/", "/" + SERVICES_PATH_NAME));
+
 
 export const router = createBrowserRouter([
   {
@@ -147,13 +162,22 @@ export const router = createBrowserRouter([
         path: "/",
         element: <MainPage />
       },
-      ...handleRoutes([{
-        path: "/service",
-        element: <ServiceWrapper><Outlet /></ServiceWrapper>,
+      {
+        path: "/" + SERVICES_PATH_NAME,
+        element: <Outlet />,
         children: [
-          ...handleRoutes(serviceRouteObj)
+          {
+            path: "",
+            element: <Navigate to="/" />
+          },
+          ...serviceRouteObj
         ]
-      }])
+      },
+      {
+        path: "*",
+        element: <Navigate to="/" />
+      },
+
     ]
   },
 ]);
@@ -176,9 +200,41 @@ export const mapToServiceData = (locale: string): ServiceData | null => {
 
 }
 
+
+type ServiceWrapperProps = {
+  data: ServiceData
+  returnPath: string
+}
+
+function ServiceWrapper({ data, returnPath }: ServiceWrapperProps) {
+
+  //TODO use relative path to ..
+  const navigate = useNavigate();
+
+  //console.log(returnPath);
+
+  return data.isPage ?
+    <ParentService>
+      <SimpleBtn1 onClick={() => navigate(returnPath)} />
+      <RequireAuthoritiesRoute viewName={data.name} authorities={data.requiredAuthorities}> {data.element} </RequireAuthoritiesRoute>
+    </ParentService> : data.element
+}
+
+type ParentServiceProps = {
+  children: React.ReactNode
+}
+
+function ParentService({ children }: ParentServiceProps) {
+  const outlet = useOutlet()
+
+  return <div>{outlet || children}</div>
+
+}
+
 type ServicePageProps = {
   children: React.ReactNode
 }
+
 
 export default function ServicePage({ children }: ServicePageProps) {
 

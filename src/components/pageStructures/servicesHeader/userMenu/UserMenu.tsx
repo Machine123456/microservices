@@ -6,7 +6,7 @@ import "./UserMenu.css";
 import PopupMenu from "../../../utils/popupMenu/PopupMenu";
 import FormToggle from "../../../forms/formToggle/FormToggle";
 import { FormType } from "../../../forms/formToggle/FormToggle.hooks";
-import { ClickBtn3 } from "../../../utils/buttons/customBtn/CustomBtn";
+import { TextBtn3 } from "../../../utils/buttons/customBtn/CustomBtn";
 
 export default function UserMenu() {
   const { isLoading, user } = useUser();
@@ -22,11 +22,13 @@ export default function UserMenu() {
         <>
           {(!user || user.id === -1) && (
             <>
-              <ClickBtn3
+              
+
+              <TextBtn3
                 text={textData.loginForm.form.title}
                 onClick={() => setPoput(FormType.Login)}
               />
-              <ClickBtn3
+              <TextBtn3
                 text={textData.registrationForm.form.title}
                 onClick={() => setPoput(FormType.Registration)}
               />

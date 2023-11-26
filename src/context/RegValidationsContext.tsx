@@ -32,55 +32,38 @@ export const RegValidationsProvider = ({
   const { doFetch, isLoading } = useFetch({
     service: "Authentication",
     onError: (error) => {
-      console.error("Error fetching inputs validations: ", error);
+      console.error("Error fetching inputs validations:", error);
       setFieldsValidations(defaultContext.fieldsValidations);
       setHasError(true);
     },
-    onData: (data) => {
-      data
-        .json()
-        .then((userRequirements) => {
-          // userRequirements is a Map<String,Map<String,String>>
-
-          if (!userRequirements)
-            throw new Error("Invalid userRequirements json data");
-
-          const fieldsRecords = userRequirements as Record<
-            string,
-            Record<string, string>
-          >;
-
-          const fieldsVals: FieldValidations[] = Object.entries(
-            fieldsRecords
-          ).map(([fieldName, fieldValidations]) => {
-            return {
-              fieldName,
-              validations: Object.entries(fieldValidations).map(
-                ([regexString, errorMsg]) => {
-                  return {
-                    regexString,
-                    errorMsg,
-                  };
-                }
-              ),
-            };
-          });
-
-          console.log("Inputs validations loaded ");
-
-          setFieldsValidations(fieldsVals);
-          setHasError(false);
-        })
-        .catch((error) => {
-          console.error("Error parsing inputs validations: ", error);
-          setFieldsValidations(defaultContext.fieldsValidations);
-          setHasError(true);
+    onData: ({json}) => {
+      try {
+        const fieldsRecords = json as Record<string,Record<string, string>>;
+        
+        const fieldsVals: FieldValidations[] = 
+        Object.entries(fieldsRecords).map(([fieldName, fieldValidations]) => {
+          return {
+            fieldName,
+            validations: Object.entries(fieldValidations)
+              .map(([regexString, errorMsg]) => { return {regexString,errorMsg} })
+          };
         });
+
+        //console.log("Inputs validations loaded ");
+        setFieldsValidations(fieldsVals);
+        setHasError(false);
+
+      } catch (error) {
+        console.error("Error parsing inputs validations:", error);
+        setFieldsValidations(defaultContext.fieldsValidations);
+        setHasError(true);
+      }
     },
   });
 
   useEffect(() => {
     doFetch({
+      useCache: true,
       endpoint: "request/getUserRequirements",
       fetchParams: {
         method: "GET",

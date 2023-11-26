@@ -1,7 +1,5 @@
 import { createContext, useState } from "react";
 import { TextData, englishTextData, portugueseTextData } from "../utils/languageTextData"; import { getCookie, updateCookie } from "../utils/cookies";
-;
-
 export enum Language {
     Portuguese = "PT",
     English = "EN",
@@ -30,10 +28,7 @@ const appTextData: { [key in Language]: TextData } = {
      [Language.English4]: englishTextData,
      [Language.English5]: englishTextData,
      [Language.English6]: englishTextData*/
-
 }
-
-
 
 type LanguageContextValues = {
     language: Language

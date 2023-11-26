@@ -2,48 +2,59 @@ import { ButtonHTMLAttributes } from "react";
 import "./CustomBtn.css";
 import { capitalizeFirstLetter } from "../../../../utils/funcs";
 
-type ClickBtnProps = ButtonHTMLAttributes<HTMLButtonElement> & {
+
+
+
+export const SimpleBtn1 = ( { ...btnProps }: ButtonHTMLAttributes<HTMLButtonElement>) => {
+
+    return (
+        <button {...btnProps} className="simple-btn1" />
+    );
+}
+
+
+type TextBtnProps = ButtonHTMLAttributes<HTMLButtonElement> & {
     text?: string
 }
 
-type CloseBtnProps = ButtonHTMLAttributes<HTMLButtonElement> & {
-   
-}
 
-export const ClickBtn1 = (props: ClickBtnProps) => {
+export const TextBtn1 = (props: TextBtnProps) => {
 
-    const {text, ...btnProps} = props;
+    const { text, ...btnProps } = props;
     return (
-        <button {...btnProps} className="click-btn1" >
+        <button {...btnProps} className="text-btn1" >
             {capitalizeFirstLetter(text?.toLowerCase())}
         </button>
     );
 }
 
-export const ClickBtn2 =(props: ClickBtnProps) => {
+export const TextBtn2 = ({ text, ...btnProps }: TextBtnProps) => {
 
-    const {text, ...btnProps} = props;
     return (
-        <button {...btnProps} className="click-btn2" >
+        <button {...btnProps} className="text-btn2" >
             {text?.toUpperCase()}
         </button>
     );
 }
 
-export const ClickBtn3 =(props: ClickBtnProps) => {
+export const TextBtn3 = ({ text, ...btnProps }: TextBtnProps) => {
 
-    const {text, ...btnProps} = props;
     return (
-        <button {...btnProps} className="click-btn3" >
+        <button {...btnProps} className="text-btn3" >
             {capitalizeFirstLetter(text?.toLowerCase())}
         </button>
     );
 }
 
-export const CloseBtn1 = (props: CloseBtnProps) => {
+type ImgBtnProps = ButtonHTMLAttributes<HTMLButtonElement> & {
+    imgSrc: string
+}
 
-    const {...btnProps} = props;
+export const ImgBtn1 = ({imgSrc, ...btnProps }: ImgBtnProps) => {
+
     return (
-        <button {...btnProps} className="close-btn1"/>
+        <button {...btnProps} className="img-btn1">
+            <img className="icon" src={imgSrc}/>
+        </button>
     );
 }

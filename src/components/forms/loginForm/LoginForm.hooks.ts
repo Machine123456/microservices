@@ -2,36 +2,26 @@ import { useState } from "react";
 import { useLanguage, useUser } from "../../../hooks/useCustomContext";
 import { useFetch } from "../../../hooks/useFetch";
 
-export function useLogin(handleResult: (sucess:boolean) => any) {
+export function useLogin(handleResult: (sucess: boolean) => any) {
 
-  const {textData} = useLanguage()
-  
+  const { textData } = useLanguage()
+
   const { doFetch, isLoading } = useFetch({
     service: "Authentication",
     onError: (error) => {
-      setFeedBackStatus(true,textData.loginForm.feedback.onServerFail);
+      setFeedBackStatus(false, textData.loginForm.feedback.onFail + " " + error);
       //setFeedback("Error during login, check logs for more info");
       console.error("Error during login:", error);
     },
-    onData: (data) => {
-      
-      data.text().then((text) => {
-        if (data.status === 200) {
-          setFeedBackStatus(false,textData.loginForm.feedback.onSuccess);
-          //setFeedback("Login Successfully");
-          updateToken(text);
-        } else {
-          setFeedBackStatus(true,textData.loginForm.feedback.onFail + " " + data.status + ": " + text);
-          //setFeedback("error " + data.status + ": " + text);
-        }
-
-      });
+    onData: ({text}) => {
+        setFeedBackStatus(true, textData.loginForm.feedback.onSuccess);
+        updateToken(text);
     }
   });
   const [feedback, setFeedback] = useState("");
 
-  const setFeedBackStatus = (hasError: boolean, text:string) => {
-    handleResult(!hasError);
+  const setFeedBackStatus = (result: boolean, text: string) => {
+    handleResult(result);
     setFeedback(text);
   }
 
@@ -39,7 +29,7 @@ export function useLogin(handleResult: (sucess:boolean) => any) {
 
   async function login(username: string | undefined, password: string | undefined) {
     //const csrfToken = document.querySelector('input[name="_csrf"]').value;
-    
+
     doFetch({
       endpoint: "request/login",
       fetchParams: {

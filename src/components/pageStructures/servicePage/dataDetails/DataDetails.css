@@ -1,0 +1,69 @@
+.details-page {
+   
+    margin: 0 auto;
+    padding: 1.5em;
+    color: black;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    .details-header {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        gap:1em;
+    }
+
+    .details-content {
+
+        display: flex;
+        justify-content: center;
+        align-items: stretch;
+        flex-direction: column;
+
+        .empty-message {
+            text-align: center;
+            font-style: italic;
+            color: #777;
+        }
+
+
+
+        .data-card {
+
+
+            padding: 10px;
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+            background-color: #f9f9f9;
+            border-radius:  0px;
+
+
+            .data-name {
+                font-size: 18px;
+                font-weight: bold;
+            }
+
+            .data-field {
+                font-size: 14px;
+                color: #777;
+            }
+
+
+            &:hover {
+                background-color: #e9e1e1;
+            }
+
+        }
+
+    }
+
+
+
+}

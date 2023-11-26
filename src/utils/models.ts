@@ -22,7 +22,7 @@ export enum MappedAuthority {
     UPDATE_ROLE = "UPDATE_ROLE",
     DELETE_ROLE = "DELETE_ROLE",
   
-    CREATE_Authority = "CREATE_AUTHORITY",
+    CREATE_AUTHORITY = "CREATE_AUTHORITY",
     READ_AUTHORITY = "READ_AUTHORITY",
     UPDATE_AUTHORITY = "UPDATE_AUTHORITY",
     DELETE_AUTHORITY = "DELETE_AUTHORITY"
@@ -52,3 +52,5 @@ export type UserData = User & {
     hasError: boolean,
     errorMsg: string
   }
+
+export type FetchDataType = "user" | "role" | "authority";

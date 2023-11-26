@@ -4,7 +4,7 @@ import LoginForm from "../loginForm/LoginForm";
 import { FormType, useToggle } from "./FormToggle.hooks";
 import { useState } from "react";
 import { useLanguage } from "../../../hooks/useCustomContext";
-import { ClickBtn1, ClickBtn2 } from "../../utils/buttons/customBtn/CustomBtn";
+import { TextBtn1, TextBtn2 } from "../../utils/buttons/customBtn/CustomBtn";
 
 type FormToggleProps = {
   startForm: FormType;
@@ -34,8 +34,8 @@ export default function FormToggle({ startForm, onSucess }: FormToggleProps) {
 
   const FormLink = (
     <div className="form-link">
-      <ClickBtn1 disabled={!enableBtn} type="submit" text={getFormBtnText(currentForm)} />
-      <ClickBtn2 onClick={onToggle} text={getFormBtnText(nextForm)} />
+      <TextBtn1 disabled={!enableBtn} type="submit" text={getFormBtnText(currentForm)} />
+      <TextBtn2 onClick={onToggle} text={getFormBtnText(nextForm)} />
     </div>
   );
 

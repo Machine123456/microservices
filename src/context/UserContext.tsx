@@ -2,7 +2,8 @@ import { createContext, useEffect, useState } from "react";
 
 import { useFetch } from "../hooks/useFetch";
 import { getCookie, updateCookie } from "../utils/cookies";
-import {MappedAuthority, User, UserData } from "../utils/models";
+import { MappedAuthority, User, UserData } from "../utils/models";
+import { useCache } from "../hooks/useCustomContext";
 
 
 type UserContextValues = {
@@ -28,34 +29,43 @@ const defaultContext: UserContextValues = {
   token: ""
 };
 
-function getUserMappedAuthorities(user:User):MappedAuthority[]{
+function getUserAuthorities(user: User): string[] {
 
-  const uniqueAuthoritiesSet = new Set<MappedAuthority>();
+  const uniqueAuthoritiesSet = new Set<string>();
 
   user.roles.forEach(role => {
+
+    /*
     if (Object.values(MappedAuthority).includes(role.name as MappedAuthority))
     uniqueAuthoritiesSet.add(role.name as MappedAuthority);
     
     role.authorities.forEach(authority => {
       if (Object.values(MappedAuthority).includes(authority.authority as MappedAuthority))
       uniqueAuthoritiesSet.add(authority.authority as MappedAuthority);
-    });
+    });*/
+
+    uniqueAuthoritiesSet.add(role.name);
+    role.authorities.forEach(authority => uniqueAuthoritiesSet.add(authority.authority));
+
   });
 
   return Array.from(uniqueAuthoritiesSet);
 
 }
 
-export function hasAuthorities(user: User, ...requiredAuthorities: MappedAuthority[]): boolean {
+export function hasAuthorities(user: User, ...requiredAuthorities: string[] | string[][]): boolean {
 
-  if(user.roles.some(role => role.name=MappedAuthority.ROLE_ADMIN))
+  if (requiredAuthorities.length === 0 || user.roles.some(role => role.name === MappedAuthority.ROLE_ADMIN)) {
     return true;
+  }
 
-  const userAuthorities = getUserMappedAuthorities(user);
+  const userAuthorities = getUserAuthorities(user);
 
-  return requiredAuthorities.every(reqAuthority => userAuthorities.includes(reqAuthority));
-  
+  return Array.isArray(requiredAuthorities[0]) ?
+    (requiredAuthorities as string[][]).some((reqAuthority: string[]) => reqAuthority.every(req => userAuthorities.includes(req))) :
+    (requiredAuthorities as string[]).every(reqAuthority => userAuthorities.includes(reqAuthority));
 }
+
 
 const USER_TOKEN_COOKIE_NAME = "token";
 
@@ -65,6 +75,7 @@ export const UserProvider = ({ children }: UserProviderProps) => {
 
   const [accessToken, setToken] = useState<string | undefined>(getCookie(USER_TOKEN_COOKIE_NAME));
   const [user, setUser] = useState<User>(defaultContext.user);
+  const { clear } = useCache();
 
   const { doFetch, isLoading } = useFetch({
     service: "Authentication",
@@ -72,21 +83,21 @@ export const UserProvider = ({ children }: UserProviderProps) => {
       console.error("Error fetching user from token:", error);
       setUser(defaultContext.user);
     },
-    onData: (data) => {
-      data.json().then((userObj: UserData) => {
+    onData: ({ json }) => {
+      try {
+        const userObj = json as UserData;
 
         if (userObj.hasError)
           throw new Error(userObj.errorMsg);
 
-        console.log(userObj);
-        
-        var newUser: User = {...userObj};
+        var newUser: User = { ...userObj };
         setUser(newUser);
-
-      }).catch((error) => {
-        console.error("Error parsing user from token:", error.message);
+      }
+      catch (error) {
+        console.error("Error parsing user from token:", error);
         setUser(defaultContext.user);
-      });
+      }
+
     }
   });
 
@@ -108,6 +119,7 @@ export const UserProvider = ({ children }: UserProviderProps) => {
 
 
   function updateToken(token: string) {
+    clear();
     updateCookie(USER_TOKEN_COOKIE_NAME, token);
     setToken(token);
   }

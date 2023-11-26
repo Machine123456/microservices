@@ -1,22 +1,24 @@
+import { Outlet } from "react-router-dom";
 import { hasAuthorities } from "../../../context/UserContext";
 import { useUser } from "../../../hooks/useCustomContext";
-import { MappedAuthority } from "../../../utils/models";
 import LoadingCircle from "../../utils/loadingCircle/LoadingCircle";
 
 type RequireAuthoritiesRouteProps = {
   children: React.ReactNode;
-  authorities: MappedAuthority[];
+  authorities: string[] | string[][];
+  viewName: string
 };
 
 export default function RequireAuthoritiesRoute({
   children,
   authorities,
+  viewName,
 }: RequireAuthoritiesRouteProps) {
   const { user, isLoading } = useUser();
 
   const UnauthorizedMessage = (
     <div>
-      <h1>Lack of permissions to view this content!</h1>
+      <h1>{"Lack of permissions to view " + viewName + " content!"}</h1>
       <h2>
         {user.username === ""
           ? "No logged user found."
@@ -32,18 +34,29 @@ export default function RequireAuthoritiesRoute({
           <h2>Required authorities state:</h2>
           <ul>
             {authorities.map((authority, index) => {
-              return (
-                <li key={index}>
-                  {authority +
-                    " " +
-                    (hasAuthorities(user, authority) ? "✓" : "✗")}
-                </li>
-              );
+
+              return (<li key={index}>
+                {
+                  !Array.isArray(authority) ? 
+                    <>{authority + " " + (hasAuthorities(user, authority) ? "✓" : "✗")}</> :
+                    <ul>
+                      {
+                        authority.map((auth,index2) => { return (
+                          <li key={index2}>
+                            {auth + " " + (hasAuthorities(user, authority) ? "✓" : "✗")}
+                          </li>
+                        )})
+                      }
+                    </ul>
+                }
+              </li>)
+
             })}
           </ul>
         </>
-      )}
-    </div>
+      )
+      }
+    </div >
   );
 
   return (
@@ -53,7 +66,10 @@ export default function RequireAuthoritiesRoute({
       ) : hasAuthorities(user, ...authorities) ? (
         children
       ) : (
-        UnauthorizedMessage
+        <>
+          {UnauthorizedMessage}
+          <Outlet />
+        </>
       )}
     </>
   );
