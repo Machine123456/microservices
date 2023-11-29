@@ -1,7 +1,7 @@
 api:
-    allowedOrigin: ${GATEWAY_SERVER:http://localhost:8091}
+    allowedOrigin: ${GATEWAY_SERVER:http://localhost:8093}
     server:
-        port: ${SERVER_PORT:8093}
+        port: ${SERVER_PORT:8092}
     database:
         host: ${DATABASE_HOST:database-1.chg7ujdhhts7.eu-west-3.rds.amazonaws.com} # localhost
         port: ${DATABASE_PORT:3306}
