@@ -1,1 +1,9 @@
+api:
+  server:
+    port:  ${SERVER_PORT:8093}
+  services:
+    authentication: ${AUTHENTICATION_SERVICE:http://localhost:8091}
+    template: ${TEMPLATE_SERVICE:http://localhost:8092}
 
+server:
+    port: ${api.server.port}
