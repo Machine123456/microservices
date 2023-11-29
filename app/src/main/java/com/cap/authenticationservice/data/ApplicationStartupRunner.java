@@ -42,10 +42,14 @@ public class ApplicationStartupRunner implements CommandLineRunner {
 		var roleAuthorities = createCrudAuthorities("role");
 		var authorityAuthorities = createCrudAuthorities("authority");
 
-		var adminRole = createRole("admin", userAuthorities, roleAuthorities, authorityAuthorities);
-		var userRole = createRole("user", userAuthorities[1],roleAuthorities[1],authorityAuthorities[1]);
+		var productAuthorities = createCrudAuthorities("product");
 
-		var adminUser = createUser("admin", adminRole);
+		var adminRole = createRole("admin", userAuthorities, roleAuthorities, authorityAuthorities,productAuthorities);
+		// var userRole =
+		createRole("user", userAuthorities[1], roleAuthorities[1], authorityAuthorities[1], productAuthorities[1]);
+
+		// var adminUser =
+		createUser("admin", adminRole);
 
 	}
 

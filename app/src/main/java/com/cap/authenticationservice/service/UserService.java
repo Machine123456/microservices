@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -84,6 +85,13 @@ public class UserService {
         var authority = authorityRepository.findById(authorityId)
                 .orElseThrow(() -> new IllegalArgumentException("Authority not found with id: " + authorityId));
         return mapToAuthorityResponse(authority);
+    }
+
+    public List<String> getAuthorities(Long userId) throws IllegalArgumentException { 
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + userId));
+
+        return user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
     }
 
     /* Create */

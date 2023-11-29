@@ -1,10 +1,5 @@
 package com.cap.authenticationservice.service;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -13,9 +8,6 @@ import org.springframework.stereotype.Service;
 
 import com.cap.authenticationservice.dto.UserRequest;
 import com.cap.authenticationservice.model.User;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
@@ -27,8 +19,8 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final TokenService tokenService;
 
-    @Value("${api.endpoint.services}")
-    private String servicesJson;
+//    @Value("${api.endpoint.services}")
+//    private String servicesJson;
 
     public String authenticateUser(UserRequest userRequest) throws AuthenticationException {
 
@@ -43,6 +35,11 @@ public class AuthenticationService {
         return token;
     }
 
+
+
+  
+/* 
+
     private List<Map<String, Object>> getServices() {
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -52,9 +49,6 @@ public class AuthenticationService {
             return null; 
         }
     }
-
-  
-/* 
 
     private final RestTemplate restTemplate;
 

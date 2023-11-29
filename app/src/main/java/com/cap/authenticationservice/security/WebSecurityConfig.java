@@ -37,8 +37,8 @@ import lombok.RequiredArgsConstructor;
 @EnableWebSecurity
 public class WebSecurityConfig {
 
-	private static String[] PUBLIC_POST_STRING_PATTERNS = { "/auth/request/**" };
-	private static String[] PUBLIC_GET_STRING_PATTERNS = { "/error", "/auth/request/**" };
+	private static String[] PUBLIC_POST_STRING_PATTERNS = { "/request/**" };
+	private static String[] PUBLIC_GET_STRING_PATTERNS = { "/error", "/request/**" };
 
 	public static List<RequestMatcher> PUBLIC_POST_PATTERNS = mapToMatchers(PUBLIC_POST_STRING_PATTERNS);
 	public static List<RequestMatcher> PUBLIC_GET_PATTERNS = mapToMatchers(PUBLIC_GET_STRING_PATTERNS);	
@@ -50,8 +50,8 @@ public class WebSecurityConfig {
 			.collect(Collectors.toList());
 	}
 
-	@Value("${api.endpoint.server.front-end}")
-    private String fe_server;
+	@Value("${api.allowedOrigin}")
+    private String gatewayUri;
 
 	private final SecurityFiler securityFiler;
 
@@ -88,7 +88,7 @@ public class WebSecurityConfig {
 	@Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList(fe_server));
+        configuration.setAllowedOrigins(Arrays.asList(gatewayUri));
 
         // You can customize other CORS properties as needed
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
@@ -118,25 +118,25 @@ public class WebSecurityConfig {
 						.requestMatchers(HttpMethod.GET, PUBLIC_GET_STRING_PATTERNS).permitAll()
 						.requestMatchers(HttpMethod.POST, PUBLIC_POST_STRING_PATTERNS).permitAll()
 
-						.requestMatchers(HttpMethod.GET, "/auth/api/users").hasAuthority("READ_USER")
-						.requestMatchers(HttpMethod.PUT, "/auth/api/users/{id}").hasAuthority("UPDATE_USER")
-						.requestMatchers(HttpMethod.DELETE, "/auth/api/users/{id}").hasAuthority("DELETE_USER")
+						.requestMatchers(HttpMethod.GET, "/api/users").hasAuthority("READ_USER")
+						.requestMatchers(HttpMethod.PUT, "/api/users/{id}").hasAuthority("UPDATE_USER")
+						.requestMatchers(HttpMethod.DELETE, "/api/users/{id}").hasAuthority("DELETE_USER")
 
-						.requestMatchers(HttpMethod.POST, "/auth/api/roles").hasAuthority("CREATE_ROLE")
-						.requestMatchers(HttpMethod.GET, "/auth/api/roles").hasAuthority("READ_ROLE")
-						.requestMatchers(HttpMethod.PUT, "/auth/api/roles/{id}").hasAuthority("UPDATE_ROLE")
-						.requestMatchers(HttpMethod.DELETE, "/auth/api/roles/{id}").hasAuthority("DELETE_ROLE")
+						.requestMatchers(HttpMethod.POST, "/api/roles").hasAuthority("CREATE_ROLE")
+						.requestMatchers(HttpMethod.GET, "/api/roles").hasAuthority("READ_ROLE")
+						.requestMatchers(HttpMethod.PUT, "/api/roles/{id}").hasAuthority("UPDATE_ROLE")
+						.requestMatchers(HttpMethod.DELETE, "/api/roles/{id}").hasAuthority("DELETE_ROLE")
 						
-						.requestMatchers(HttpMethod.POST, "/auth/api/authorities").hasAuthority("CREATE_AUTHORITY")
-						.requestMatchers(HttpMethod.GET, "/auth/api/authorities").hasAuthority("READ_AUTHORITY")
-						.requestMatchers(HttpMethod.PUT, "/auth/api/authorities/{id}").hasAuthority("UPDATE_AUTHORITY")
-						.requestMatchers(HttpMethod.DELETE, "/auth/api/authorities/{id}").hasAuthority("DELETE_AUTHORITY")
+						.requestMatchers(HttpMethod.POST, "/api/authorities").hasAuthority("CREATE_AUTHORITY")
+						.requestMatchers(HttpMethod.GET, "/api/authorities").hasAuthority("READ_AUTHORITY")
+						.requestMatchers(HttpMethod.PUT, "/api/authorities/{id}").hasAuthority("UPDATE_AUTHORITY")
+						.requestMatchers(HttpMethod.DELETE, "/api/authorities/{id}").hasAuthority("DELETE_AUTHORITY")
 						
 						//.requestMatchers(HttpMethod.GET, "/admin").hasRole("ADMIN")
 						.anyRequest().authenticated())
 						
 				.exceptionHandling(exception -> exception.defaultAuthenticationEntryPointFor(authenticationEntryPoint(),
-						new AntPathRequestMatcher("/auth/**")))
+						new AntPathRequestMatcher("/**")))
 				.cors(cors -> cors.configurationSource(corsConfigurationSource));
 				/*
 					.formLogin(form -> form

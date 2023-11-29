@@ -23,7 +23,7 @@ import com.cap.authenticationservice.service.UserService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/auth/api")
+@RequestMapping("/api")
 @RequiredArgsConstructor
 public class UserController {
 

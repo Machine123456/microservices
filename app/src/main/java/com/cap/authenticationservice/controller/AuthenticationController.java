@@ -1,5 +1,6 @@
 package com.cap.authenticationservice.controller;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
@@ -21,7 +22,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/auth/request")
+@RequestMapping("/request")
 @RequiredArgsConstructor
 public class AuthenticationController{
 
@@ -81,7 +82,7 @@ public class AuthenticationController{
     }
 
 
-    @GetMapping("/getUserFromToken")
+    @GetMapping("/tokenUser")
     public ResponseEntity<UserResponse> getUserFromToken(HttpServletRequest request) {
         try {
             var token = tokenService.recoverToken(request);
@@ -98,7 +99,25 @@ public class AuthenticationController{
         }
     }
 
-    @GetMapping("/getUserRequirements")
+     @GetMapping("/tokenAuthorities")
+    public ResponseEntity<List<String>> getAuthoritiesFromToken(HttpServletRequest request) {
+        try {
+            var token = tokenService.recoverToken(request);
+            var tokenResult = tokenService.validateToken(token);//URLDecoder.decode(token, "UTF-8"));
+
+            if(!tokenResult.isPresent())
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(List.of("No Valid Token Found"));
+
+            var userId = tokenResult.get();
+            var authorities = userService.getAuthorities(userId);
+
+            return ResponseEntity.ok(authorities);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(List.of(e.getMessage()));
+        }
+    }
+
+    @GetMapping("/userRequirements")
     public ResponseEntity<Map<String,Map<String,String>>> getUserRequirements() {
         return ResponseEntity.ok(userService.getUserFieldsRequirements());
     }
