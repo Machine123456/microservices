@@ -39,7 +39,7 @@ async function register(postBody: {}) {
     };
 
     doFetch({
-        endpoint: 'request/register',
+        endpoint: '/register',
         fetchParams: {
             method: "POST",
             body: JSON.stringify(postBody)

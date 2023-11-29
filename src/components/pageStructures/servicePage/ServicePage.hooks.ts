@@ -49,7 +49,7 @@ export function useDataFetch<T>({ service, dataName, dataParams }: UseDataFetchP
     });
 
     const getEndPoint = () => {
-        let endpoint = "api/" + dataName;
+        let endpoint = "/" + dataName;
 
         if (dataParams) {
             endpoint += "?"

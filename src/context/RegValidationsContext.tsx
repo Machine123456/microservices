@@ -64,7 +64,7 @@ export const RegValidationsProvider = ({
   useEffect(() => {
     doFetch({
       useCache: true,
-      endpoint: "request/getUserRequirements",
+      endpoint: "/userRequirements",
       fetchParams: {
         method: "GET",
         headers: {

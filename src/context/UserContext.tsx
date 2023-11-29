@@ -104,7 +104,7 @@ export const UserProvider = ({ children }: UserProviderProps) => {
   useEffect(() => {
     if (accessToken && accessToken.length > 0)
       doFetch({
-        endpoint: "request/getUserFromToken",
+        endpoint: "/tokenUser",
         fetchParams: {
           method: "GET",
           headers: {
